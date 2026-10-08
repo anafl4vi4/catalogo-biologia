@@ -21,4 +21,4 @@ export const routes: Routes = [
     path: 'sobre',
     component: Sobre
   }
-];
+]
