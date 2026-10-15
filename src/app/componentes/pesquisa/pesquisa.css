@@ -1,0 +1,70 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.campo-pesquisa {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto 22px;
+  padding: 16px 20px;
+  box-sizing: border-box;
+  border: 1px solid #dce6dd;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(27, 61, 38, 0.035);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.campo-pesquisa:hover {
+  border-color: #b9d1be;
+}
+
+.campo-pesquisa:focus-within {
+  border-color: #27834a;
+  box-shadow: 0 0 0 4px rgba(39, 131, 74, 0.10);
+}
+
+.icone-pesquisa {
+  flex-shrink: 0;
+  color: #39804d;
+  font-size: 19px;
+  line-height: 1;
+}
+
+.campo-pesquisa input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #24352a;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.campo-pesquisa input::placeholder {
+  color: #929e94;
+}
+
+.campo-pesquisa input:focus-visible {
+  outline: none;
+}
+
+@media (max-width: 600px) {
+  .campo-pesquisa {
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 14px 15px;
+    border-radius: 12px;
+  }
+
+  .campo-pesquisa input {
+    font-size: 14px;
+  }
+}

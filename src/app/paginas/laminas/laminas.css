@@ -1,136 +1,293 @@
-.pagina {
+/* ===== CONFIGURAÇÕES GERAIS ===== */
+
+:host {
+  display: block;
   min-height: 100vh;
-  background: #f5f8f6;
-  padding: 60px 8%;
+  background: #f5f8f5;
+  color: #24352a;
 }
 
-/* Cabeçalho */
+.pagina {
+  width: min(1120px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 48px 0 72px;
+  box-sizing: border-box;
+}
+
+/* ===== CABEÇALHO DA PÁGINA ===== */
 
 .cabecalho-pagina {
-  max-width: 700px;
-  margin-bottom: 45px;
+  max-width: 720px;
+  margin: 0 auto 36px;
+  text-align: center;
 }
 
 .tag {
-  color: #15803d;
-  font-size: 12px;
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 7px 12px;
+  border-radius: 20px;
+  background: #e3f1e6;
+  color: #267342;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 1.5px;
 }
 
 .cabecalho-pagina h1 {
-  margin: 10px 0;
-  font-size: 42px;
-  color: #172b1d;
+  margin: 0 0 14px;
+  color: #193d29;
+  font-size: clamp(32px, 5vw, 46px);
+  font-weight: 750;
+  letter-spacing: -1.2px;
 }
 
 .cabecalho-pagina p {
-  color: #64748b;
-  line-height: 1.6;
+  max-width: 590px;
+  margin: 0 auto;
+  color: #69796d;
   font-size: 16px;
+  line-height: 1.8;
 }
 
-/* Catálogo */
+/* ===== FILTRO DE CATEGORIAS ===== */
 
-.catalogo {
-  max-width: 1200px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-}
-
-/* Card */
-
-.lamina-card {
-  background: white;
-  border: 1px solid #e5ebe7;
-  border-radius: 18px;
-  padding: 22px;
-  display: flex;
-  gap: 22px;
-  transition: 0.25s;
-}
-
-.lamina-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(22, 101, 52, 0.10);
-}
-
-/* Imagem */
-
-.imagem-lamina {
-  min-width: 125px;
-  height: 125px;
-  border-radius: 15px;
-  background: #e9f8ed;
+.filtros {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 55px;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0 auto 36px;
 }
 
-/* Informações */
+.filtros label {
+  color: #344b3a;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.filtros select {
+  min-width: 230px;
+  padding: 13px 40px 13px 15px;
+  border: 1px solid #dce6dd;
+  border-radius: 12px;
+  background-color: #ffffff;
+  color: #24352a;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.filtros select:hover {
+  border-color: #9cbea5;
+}
+
+.filtros select:focus {
+  border-color: #27834a;
+  box-shadow: 0 0 0 4px rgba(39, 131, 74, 0.10);
+}
+
+/* ===== GRADE DO CATÁLOGO ===== */
+
+.catalogo {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  align-items: stretch;
+}
+
+/* ===== CARDS DAS LÂMINAS ===== */
+
+.lamina-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #e3ebe4;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(27, 61, 38, 0.04);
+  transition: transform 0.22s ease, box-shadow 0.22s ease,
+    border-color 0.22s ease;
+}
+
+.lamina-card:hover {
+  transform: translateY(-5px);
+  border-color: #c8dfcd;
+  box-shadow: 0 14px 32px rgba(27, 61, 38, 0.09);
+}
+
+.imagem-lamina {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+  padding: 24px;
+  background: linear-gradient(135deg, #eaf5ec, #f5f9f5);
+  font-size: 54px;
+}
 
 .informacoes {
-  padding-top: 3px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 24px;
 }
 
 .categoria {
-  color: #15803d;
-  font-size: 12px;
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #eaf5ec;
+  color: #267342;
+  font-size: 11px;
   font-weight: 700;
-  text-transform: uppercase;
+  letter-spacing: 0.4px;
 }
 
 .informacoes h2 {
-  margin: 8px 0;
-  color: #1f2933;
+  margin: 0 0 10px;
+  color: #203b29;
   font-size: 21px;
+  font-weight: 700;
+  line-height: 1.35;
 }
 
 .informacoes p {
-  margin: 0 0 15px;
-  color: #64748b;
+  margin: 0 0 22px;
+  color: #6b796e;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.8;
 }
+
+/* ===== DETALHES DAS LÂMINAS ===== */
 
 .detalhes {
   display: flex;
-  gap: 12px;
   flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #edf1ed;
 }
 
 .detalhes span {
-  padding: 6px 9px;
-  border-radius: 7px;
-  background: #f1f5f3;
-  color: #475569;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  background: #f5f8f5;
+  color: #4e6253;
   font-size: 12px;
+  font-weight: 600;
 }
 
-/* Responsividade */
+/* ===== NENHUM RESULTADO ===== */
 
-@media (max-width: 800px) {
+.sem-resultados {
+  grid-column: 1 / -1;
+  padding: 52px 24px;
+  border: 1px dashed #cbdace;
+  border-radius: 18px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.sem-resultados h2 {
+  margin: 0 0 10px;
+  color: #254530;
+  font-size: 21px;
+}
+
+.sem-resultados p {
+  margin: 0;
+  color: #718074;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* ===== TABLETS ===== */
+
+@media (max-width: 760px) {
+  .pagina {
+    width: calc(100% - 32px);
+    padding: 36px 0 52px;
+  }
 
   .catalogo {
-    grid-template-columns: 1fr;
+    gap: 18px;
   }
 
+  .informacoes {
+    padding: 20px;
+  }
+
+  .informacoes h2 {
+    font-size: 19px;
+  }
 }
 
-@media (max-width: 550px) {
+/* ===== CELULARES ===== */
 
+@media (max-width: 540px) {
   .pagina {
-    padding: 40px 5%;
+    width: calc(100% - 28px);
+    padding-top: 30px;
   }
 
-  .lamina-card {
-    flex-direction: column;
+  .cabecalho-pagina {
+    margin-bottom: 28px;
+  }
+
+  .cabecalho-pagina p {
+    font-size: 14px;
+  }
+
+  .catalogo {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
   }
 
   .imagem-lamina {
-    width: 100%;
+    min-height: 120px;
+    font-size: 46px;
   }
 
+  .informacoes {
+    padding: 20px;
+  }
+
+  .filtros {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 9px;
+    margin-bottom: 28px;
+  }
+
+  .filtros select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .detalhes {
+    gap: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lamina-card,
+  .filtros select {
+    transition: none;
+  }
+
+  .lamina-card:hover {
+    transform: none;
+  }
 }
