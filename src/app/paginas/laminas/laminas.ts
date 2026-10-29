@@ -2,15 +2,7 @@
 import { Component } from '@angular/core';
 import { Cabeca } from '../../componentes/cabeca/cabeca';
 import { Pesquisa } from '../../componentes/pesquisa/pesquisa';
-
-interface Lamina {
-  nome: string;
-  categoria: string;
-  descricao: string;
-  aumento: string;
-  material: string;
-  icone: string;
-}
+import { LaminasApi, Lamina } from '../../servicos/laminas-api';
 
 @Component({
   selector: 'app-laminas',
@@ -23,40 +15,21 @@ export class Laminas {
   termoPesquisa = '';
   categoriaSelecionada = 'Todas';
 
-  laminas: Lamina[] = [
-    {
-      nome: 'Tecido Epitelial',
-      categoria: 'Histologia',
-      descricao: 'Lâmina para observação de estruturas do tecido epitelial.',
-      aumento: '400x',
-      material: 'Microscópica',
-      icone: '🔬'
-    },
-    {
-      nome: 'Célula Vegetal',
-      categoria: 'Botânica',
-      descricao: 'Observação das principais estruturas presentes em células vegetais.',
-      aumento: '400x',
-      material: 'Vegetal',
-      icone: '🌱'
-    },
-    {
-      nome: 'Bactérias',
-      categoria: 'Microbiologia',
-      descricao: 'Lâmina destinada à observação de diferentes tipos de bactérias.',
-      aumento: '1000x',
-      material: 'Microbiológica',
-      icone: '🦠'
-    },
-    {
-      nome: 'Tecido Muscular',
-      categoria: 'Histologia',
-      descricao: 'Lâmina para estudo das características do tecido muscular.',
-      aumento: '400x',
-      material: 'Animal',
-      icone: '🫀'
-    }
-  ];
+  laminas: Lamina[] = [];
+  erroCarregamento = false;
+
+  constructor(private laminasApi: LaminasApi) {
+    this.laminasApi.listar().subscribe({
+      next: (dados) => {
+        this.laminas = dados;
+        this.erroCarregamento = false;
+      },
+      error: (erro) => {
+        console.error('Erro ao carregar as lâminas da API:', erro);
+        this.erroCarregamento = true;
+      }
+    });
+  }
 
   get laminasFiltradas(): Lamina[] {
     const termo = this.termoPesquisa.trim().toLowerCase();
