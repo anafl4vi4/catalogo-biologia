@@ -1,0 +1,361 @@
+
+<div class="pagina-cadastro">
+
+  <section class="cabecalho-pagina">
+    <span class="tag">GERENCIAMENTO DO ACERVO</span>
+    <h1>Gerenciar acervo</h1>
+    <p>
+      Cadastre e organize as lâminas e categorias do catálogo de Biologia.
+    </p>
+  </section>
+
+  <!-- ABAS -->
+  <nav class="abas-cadastro">
+    <button
+      type="button"
+      [class.ativa]="abaAtiva === 'laminas'"
+      (click)="trocarAba('laminas')"
+    >
+      🔬 Lâminas
+    </button>
+
+    <button
+      type="button"
+      [class.ativa]="abaAtiva === 'categorias'"
+      (click)="trocarAba('categorias')"
+    >
+      🗂️ Categorias
+    </button>
+  </nav>
+
+  <!-- MENSAGENS -->
+  <p class="mensagem-sucesso" *ngIf="mensagem">
+    {{ mensagem }}
+  </p>
+
+  <p class="mensagem-erro" *ngIf="erro">
+    {{ erro }}
+  </p>
+
+  <!-- ABA DE LÂMINAS -->
+  <section *ngIf="abaAtiva === 'laminas'">
+
+    <h2>
+      {{ laminaEditandoId !== null ? 'Editar lâmina' : 'Cadastrar nova lâmina' }}
+    </h2>
+
+    <form (ngSubmit)="cadastrar()" #formularioLamina="ngForm">
+
+      <div class="campo">
+        <label for="codigo">Código *</label>
+        <input
+          type="text"
+          id="codigo"
+          name="codigo"
+          [(ngModel)]="lamina.codigo"
+          placeholder="Ex.: L005"
+          required
+        >
+      </div>
+
+      <div class="campo">
+        <label for="nome">Nome da lâmina *</label>
+        <input
+          type="text"
+          id="nome"
+          name="nome"
+          [(ngModel)]="lamina.nome"
+          placeholder="Ex.: Tecido Nervoso"
+          required
+        >
+      </div>
+
+      <div class="campo">
+        <label for="categoria">Categoria *</label>
+
+        <select
+          id="categoria"
+          name="categoria"
+          [(ngModel)]="lamina.categoria"
+          [disabled]="carregandoCategorias || categorias.length === 0"
+          required
+        >
+          <option value="">Selecione uma categoria</option>
+
+          <option
+            *ngFor="let item of categorias"
+            [value]="item.nome"
+          >
+            {{ item.nome }}
+          </option>
+        </select>
+
+        <small *ngIf="carregandoCategorias">
+          Carregando categorias...
+        </small>
+
+        <small *ngIf="!carregandoCategorias && categorias.length === 0">
+          Nenhuma categoria cadastrada. Cadastre uma na aba Categorias.
+        </small>
+      </div>
+
+      <div class="campo">
+        <label for="descricao">Descrição</label>
+        <textarea
+          id="descricao"
+          name="descricao"
+          [(ngModel)]="lamina.descricao"
+          placeholder="Descreva a lâmina..."
+          rows="4"
+        ></textarea>
+      </div>
+
+      <div class="campo">
+        <label for="material">Material</label>
+        <input
+          type="text"
+          id="material"
+          name="material"
+          [(ngModel)]="lamina.material"
+          placeholder="Ex.: Tecido animal"
+        >
+      </div>
+
+      <div class="campo">
+        <label for="aumento">Aumento</label>
+        <input
+          type="text"
+          id="aumento"
+          name="aumento"
+          [(ngModel)]="lamina.aumento"
+          placeholder="Ex.: 400x"
+        >
+      </div>
+
+      <div class="campo">
+        <label for="quantidade">Quantidade</label>
+        <input
+          type="number"
+          id="quantidade"
+          name="quantidade"
+          [(ngModel)]="lamina.quantidade"
+          min="0"
+        >
+      </div>
+
+      <div class="campo">
+        <label for="estado">Estado</label>
+        <select
+          id="estado"
+          name="estado"
+          [(ngModel)]="lamina.estado"
+        >
+          <option value="Disponível">Disponível</option>
+          <option value="Indisponível">Indisponível</option>
+          <option value="Em manutenção">Em manutenção</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="imagem">Imagem</label>
+        <input
+          type="text"
+          id="imagem"
+          name="imagem"
+          [(ngModel)]="lamina.imagem"
+          placeholder="Endereço da imagem (URL)"
+        >
+      </div>
+
+      <div class="campo">
+        <label for="observacoes">Observações</label>
+        <textarea
+          id="observacoes"
+          name="observacoes"
+          [(ngModel)]="lamina.observacoes"
+          placeholder="Informações adicionais..."
+          rows="3"
+        ></textarea>
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="
+          formularioLamina.invalid ||
+          salvando ||
+          carregandoCategorias ||
+          categorias.length === 0
+        "
+      >
+        {{
+          salvando
+            ? 'Salvando...'
+            : laminaEditandoId !== null
+              ? 'Salvar alterações'
+              : 'Cadastrar lâmina'
+        }}
+      </button>
+
+      <button
+        *ngIf="laminaEditandoId !== null"
+        type="button"
+        (click)="cancelarEdicaoLamina()"
+      >
+        Cancelar edição
+      </button>
+
+    </form>
+
+    <!-- LISTA DE LÂMINAS -->
+    <div class="lista-laminas">
+
+      <h2>Lâminas cadastradas</h2>
+
+      <p *ngIf="carregandoLaminas">
+        Carregando lâminas...
+      </p>
+
+      <p *ngIf="!carregandoLaminas && laminas.length === 0">
+        Nenhuma lâmina cadastrada.
+      </p>
+
+      <article
+        class="lamina-item"
+        *ngFor="let item of laminas"
+      >
+
+        <div class="informacoes-lamina">
+          <h3>{{ item.nome }}</h3>
+
+          <p><strong>Código:</strong> {{ item.codigo }}</p>
+          <p><strong>Categoria:</strong> {{ item.categoria }}</p>
+          <p><strong>Material:</strong> {{ item.material || 'Não informado' }}</p>
+          <p><strong>Aumento:</strong> {{ item.aumento || 'Não informado' }}</p>
+          <p><strong>Quantidade:</strong> {{ item.quantidade }}</p>
+          <p><strong>Estado:</strong> {{ item.estado }}</p>
+          <p>{{ item.descricao || 'Sem descrição.' }}</p>
+        </div>
+
+        <div class="acoes-lamina">
+
+          <button
+            type="button"
+            (click)="editarLamina(item)"
+          >
+            Editar
+          </button>
+
+          <button
+            type="button"
+            (click)="excluirLamina(item.id)"
+          >
+            Excluir
+          </button>
+
+        </div>
+
+      </article>
+
+    </div>
+
+  </section>
+
+  <!-- ABA DE CATEGORIAS -->
+  <section *ngIf="abaAtiva === 'categorias'">
+
+    <h2>
+      {{ categoriaEditandoId !== null ? 'Editar categoria' : 'Cadastrar nova categoria' }}
+    </h2>
+
+    <form (ngSubmit)="salvarCategoria()" #formularioCategoria="ngForm">
+
+      <div class="campo">
+        <label for="nomeCategoria">Nome da categoria *</label>
+        <input
+          type="text"
+          id="nomeCategoria"
+          name="nomeCategoria"
+          [(ngModel)]="categoria.nome"
+          placeholder="Ex.: Citologia"
+          required
+        >
+      </div>
+
+      <div class="campo">
+        <label for="descricaoCategoria">Descrição</label>
+        <textarea
+          id="descricaoCategoria"
+          name="descricaoCategoria"
+          [(ngModel)]="categoria.descricao"
+          placeholder="Descreva o conteúdo desta categoria..."
+          rows="4"
+        ></textarea>
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="formularioCategoria.invalid || salvando"
+      >
+        {{
+          salvando
+            ? 'Salvando...'
+            : categoriaEditandoId !== null
+              ? 'Salvar alterações'
+              : 'Cadastrar categoria'
+        }}
+      </button>
+
+      <button
+        *ngIf="categoriaEditandoId !== null"
+        type="button"
+        (click)="cancelarEdicao()"
+      >
+        Cancelar edição
+      </button>
+
+    </form>
+
+    <!-- LISTA DE CATEGORIAS -->
+    <div class="lista-categorias">
+
+      <h2>Categorias cadastradas</h2>
+
+      <p *ngIf="carregandoCategorias">
+        Carregando categorias...
+      </p>
+
+      <p *ngIf="!carregandoCategorias && categorias.length === 0">
+        Nenhuma categoria cadastrada.
+      </p>
+
+      <article
+        class="categoria-item"
+        *ngFor="let item of categorias"
+      >
+        <div>
+          <h3>{{ item.nome }}</h3>
+          <p>{{ item.descricao || 'Sem descrição.' }}</p>
+        </div>
+
+        <div class="acoes-categoria">
+          <button
+            type="button"
+            (click)="editarCategoria(item)"
+          >
+            Editar
+          </button>
+
+          <button
+            type="button"
+            (click)="excluirCategoria(item.id)"
+          >
+            Excluir
+          </button>
+        </div>
+      </article>
+
+    </div>
+
+  </section>
+
+</div>

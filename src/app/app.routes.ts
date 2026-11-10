@@ -1,8 +1,11 @@
+
 import { Routes } from '@angular/router';
+
 import { Laminas } from './paginas/laminas/laminas';
 import { Inicio } from './paginas/inicio/inicio';
 import { Categorias } from './paginas/categorias/categorias';
 import { Sobre } from './paginas/sobre/sobre';
+import { Cadastro } from './paginas/cadastro/cadastro';
 
 export const routes: Routes = [
   {
@@ -20,5 +23,9 @@ export const routes: Routes = [
   {
     path: 'sobre',
     component: Sobre
+  },
+  {
+    path: 'cadastro',
+    component: Cadastro
   }
-]
+];

@@ -19,52 +19,88 @@
   </app-pesquisa>
 
   <section class="filtros">
-    <label for="filtro-categoria">Filtrar por categoria:</label>
+
+    <label for="filtro-categoria">
+      Filtrar por categoria:
+    </label>
 
     <select
       id="filtro-categoria"
       [value]="categoriaSelecionada"
       (change)="aoSelecionarCategoria($event)"
     >
-      <option value="Todas">Todas as categorias</option>
-      <option value="Histologia">Histologia</option>
-      <option value="Botânica">Botânica</option>
-      <option value="Microbiologia">Microbiologia</option>
+      <option value="Todas">
+        Todas as categorias
+      </option>
+
+      @for (categoria of categorias; track categoria.id) {
+        <option [value]="categoria.nome">
+          {{ categoria.nome }}
+        </option>
+      }
+
     </select>
+
   </section>
 
   <section class="catalogo">
 
-    @for (lamina of laminasFiltradas; track lamina.nome) {
-      <div class="lamina-card">
+    @if (carregandoLaminas) {
 
-        <div class="imagem-lamina">
-          {{ lamina.icone }}
-        </div>
-
-        <div class="informacoes">
-          <span class="categoria">
-            {{ lamina.categoria }}
-          </span>
-
-          <h2>{{ lamina.nome }}</h2>
-
-          <p>{{ lamina.descricao }}</p>
-
-          <div class="detalhes">
-            <span>🔍 {{ lamina.aumento }}</span>
-            <span>🧪 {{ lamina.material }}</span>
-          </div>
-        </div>
-
-      </div>
-    } @empty {
       <div class="sem-resultados">
-        <h2>Nenhuma lâmina encontrada</h2>
+        <p>Carregando lâminas...</p>
+      </div>
+
+    } @else if (erroCarregamento) {
+
+      <div class="sem-resultados">
+        <h2>Não foi possível carregar o catálogo</h2>
         <p>
-          Tente alterar a pesquisa ou escolher outra categoria.
+          Verifique se o servidor está funcionando e tente novamente.
         </p>
       </div>
+
+    } @else {
+
+      @for (lamina of laminasFiltradas; track lamina.id) {
+
+        <div class="lamina-card">
+
+          <div class="imagem-lamina">
+            {{ lamina.icone || '🔬' }}
+          </div>
+
+          <div class="informacoes">
+
+            <span class="categoria">
+              {{ lamina.categoria }}
+            </span>
+
+            <h2>{{ lamina.nome }}</h2>
+
+            <p>{{ lamina.descricao }}</p>
+
+            <div class="detalhes">
+              <span>🔍 {{ lamina.aumento }}</span>
+              <span>🧪 {{ lamina.material }}</span>
+            </div>
+
+          </div>
+
+        </div>
+
+      } @empty {
+
+        <div class="sem-resultados">
+          <h2>Nenhuma lâmina encontrada</h2>
+
+          <p>
+            Tente alterar a pesquisa ou escolher outra categoria.
+          </p>
+        </div>
+
+      }
+
     }
 
   </section>
