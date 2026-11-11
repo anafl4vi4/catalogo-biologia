@@ -46,6 +46,8 @@
 
     <form (ngSubmit)="cadastrar()" #formularioLamina="ngForm">
 
+      <h3>Identificação da lâmina</h3>
+
       <div class="campo">
         <label for="codigo">Código *</label>
         <input
@@ -67,6 +69,17 @@
           [(ngModel)]="lamina.nome"
           placeholder="Ex.: Tecido Nervoso"
           required
+        >
+      </div>
+
+      <div class="campo">
+        <label for="nomeCientifico">Nome científico</label>
+        <input
+          type="text"
+          id="nomeCientifico"
+          name="nomeCientifico"
+          [(ngModel)]="lamina.nome_cientifico"
+          placeholder="Nome científico do material biológico"
         >
       </div>
 
@@ -100,15 +113,17 @@
       </div>
 
       <div class="campo">
-        <label for="descricao">Descrição</label>
-        <textarea
-          id="descricao"
-          name="descricao"
-          [(ngModel)]="lamina.descricao"
-          placeholder="Descreva a lâmina..."
-          rows="4"
-        ></textarea>
+        <label for="tipoMaterial">Tipo de material biológico</label>
+        <input
+          type="text"
+          id="tipoMaterial"
+          name="tipoMaterial"
+          [(ngModel)]="lamina.tipo_material_biologico"
+          placeholder="Ex.: Animal, vegetal ou microbiológico"
+        >
       </div>
+
+      <h3>Características e composição</h3>
 
       <div class="campo">
         <label for="material">Material</label>
@@ -133,6 +148,55 @@
       </div>
 
       <div class="campo">
+        <label for="origem">Origem</label>
+        <input
+          type="text"
+          id="origem"
+          name="origem"
+          [(ngModel)]="lamina.origem"
+          placeholder="Origem do material biológico"
+        >
+      </div>
+
+      <div class="campo">
+        <label for="descricao">Descrição</label>
+        <textarea
+          id="descricao"
+          name="descricao"
+          [(ngModel)]="lamina.descricao"
+          placeholder="Descreva a lâmina..."
+          rows="4"
+        ></textarea>
+      </div>
+
+      <div class="campo">
+        <label for="estruturas">Estruturas observadas</label>
+        <textarea
+          id="estruturas"
+          name="estruturas"
+          [(ngModel)]="lamina.estruturas_observadas"
+          placeholder="Informe as estruturas que podem ser observadas na lâmina..."
+          rows="4"
+        ></textarea>
+      </div>
+
+      <h3>Informações de conservação e armazenamento</h3>
+
+      <div class="campo">
+        <label for="estadoConservacao">Estado de conservação</label>
+        <select
+          id="estadoConservacao"
+          name="estadoConservacao"
+          [(ngModel)]="lamina.estado_conservacao"
+        >
+          <option value="Novo">Novo</option>
+          <option value="Regular">Regular</option>
+          <option value="Velho">Velho</option>
+          <option value="Danificado">Danificado</option>
+        </select>
+      </div>
+
+      <div class="campo">
         <label for="quantidade">Quantidade</label>
         <input
           type="number"
@@ -144,17 +208,28 @@
       </div>
 
       <div class="campo">
-        <label for="estado">Estado</label>
-        <select
-          id="estado"
-          name="estado"
-          [(ngModel)]="lamina.estado"
+        <label for="numeroPatrimonio">Número do patrimônio</label>
+        <input
+          type="text"
+          id="numeroPatrimonio"
+          name="numeroPatrimonio"
+          [(ngModel)]="lamina.numero_patrimonio"
+          placeholder="Número de identificação patrimonial"
         >
-          <option value="Disponível">Disponível</option>
-          <option value="Indisponível">Indisponível</option>
-          <option value="Em manutenção">Em manutenção</option>
-        </select>
       </div>
+
+      <div class="campo">
+        <label for="local">Local de armazenamento</label>
+        <input
+          type="text"
+          id="local"
+          name="local"
+          [(ngModel)]="lamina.local"
+          placeholder="Ex.: Armário 02, Gaveta 03"
+        >
+      </div>
+
+      <h3>Informações complementares</h3>
 
       <div class="campo">
         <label for="imagem">Imagem</label>
@@ -165,6 +240,17 @@
           [(ngModel)]="lamina.imagem"
           placeholder="Endereço da imagem (URL)"
         >
+      </div>
+
+      <div class="campo">
+        <label for="referencias">Referências bibliográficas</label>
+        <textarea
+          id="referencias"
+          name="referencias"
+          [(ngModel)]="lamina.referencias_bibliograficas"
+          placeholder="Informe as fontes e referências utilizadas..."
+          rows="3"
+        ></textarea>
       </div>
 
       <div class="campo">
@@ -228,12 +314,24 @@
           <h3>{{ item.nome }}</h3>
 
           <p><strong>Código:</strong> {{ item.codigo }}</p>
+          <p><strong>Nome científico:</strong> {{ item.nome_cientifico || 'Não informado' }}</p>
           <p><strong>Categoria:</strong> {{ item.categoria }}</p>
+          <p><strong>Tipo de material biológico:</strong> {{ item.tipo_material_biologico || 'Não informado' }}</p>
           <p><strong>Material:</strong> {{ item.material || 'Não informado' }}</p>
           <p><strong>Aumento:</strong> {{ item.aumento || 'Não informado' }}</p>
           <p><strong>Quantidade:</strong> {{ item.quantidade }}</p>
-          <p><strong>Estado:</strong> {{ item.estado }}</p>
-          <p>{{ item.descricao || 'Sem descrição.' }}</p>
+          <p><strong>Estado de conservação:</strong> {{ item.estado_conservacao || 'Não informado' }}</p>
+          <p><strong>Número do patrimônio:</strong> {{ item.numero_patrimonio || 'Não informado' }}</p>
+          <p><strong>Data de cadastro:</strong> {{ item.data_cadastro | date:'dd/MM/yyyy HH:mm' }}</p>
+          <p><strong>Última atualização:</strong> {{ item.ultima_atualizacao | date:'dd/MM/yyyy HH:mm' }}</p>
+          <p><strong>Responsável pelo cadastro (ID):</strong> {{ item.responsavel_cadastro_id ?? 'Não definido' }}</p>
+          <p><strong>Origem:</strong> {{ item.origem || 'Não informada' }}</p>
+          <p><strong>Descrição:</strong> {{ item.descricao || 'Sem descrição.' }}</p>
+          <p><strong>Estruturas observadas:</strong> {{ item.estruturas_observadas || 'Não informado' }}</p>
+          <p><strong>Local:</strong> {{ item.local || 'Não informado' }}</p>
+          <p><strong>Referências bibliográficas:</strong> {{ item.referencias_bibliograficas || 'Não informadas' }}</p>
+          <p><strong>Imagem:</strong> {{ item.imagem || 'Não informada' }}</p>
+          <p><strong>Observações:</strong> {{ item.observacoes || 'Nenhuma observação.' }}</p>
         </div>
 
         <div class="acoes-lamina">

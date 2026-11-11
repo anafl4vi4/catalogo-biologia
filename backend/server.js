@@ -8,7 +8,6 @@ const { Pool } = require('pg');
 const app = express();
 const PORTA = 3000;
 
-// Conexão com o PostgreSQL.
 const pool = new Pool({
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT || 5432),
@@ -17,7 +16,6 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD
 });
 
-// Configurações do servidor.
 app.use(cors());
 app.use(express.json());
 
@@ -27,41 +25,57 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
   res.json({
-    mensagem: 'API do Catálogo de Biologia funcionando!'
+    mensagem: 'API do LIBRA funcionando!'
   });
 });
 
 // ==========================================
-// ROTAS DE LÂMINAS
+// CONSULTA PADRÃO DE LÂMINAS
 // ==========================================
 
+const consultaLaminas = `
+  SELECT
+    l.id,
+    l.codigo,
+    l.nome,
+    l.nome_cientifico,
+    c.nome AS categoria,
+    l.tipo_material_biologico,
+    l.descricao,
+    l.material,
+    l.aumento,
+    l.numero_patrimonio,
+    l.quantidade,
+    l.data_cadastro,
+    l.ultima_atualizacao,
+    l.responsavel_cadastro_id,
+    l.origem,
+    l.estruturas_observadas,
+    l.estado_conservacao,
+    l.imagem,
+    l.local,
+    l.referencias_bibliograficas,
+    l.observacoes,
+    CASE
+      WHEN c.nome = 'Histologia' THEN '🔬'
+      WHEN c.nome = 'Botânica' THEN '🌱'
+      WHEN c.nome = 'Microbiologia' THEN '🦠'
+      WHEN c.nome = 'Citologia' THEN '🧫'
+      ELSE '🧪'
+    END AS icone
+  FROM laminas l
+  INNER JOIN categorias c ON l.categoria_id = c.id
+`;
+
+// ==========================================
 // LISTAR TODAS AS LÂMINAS
+// ==========================================
+
 app.get('/api/laminas', async (req, res) => {
   try {
-    const resultado = await pool.query(`
-      SELECT
-        l.id,
-        l.codigo,
-        l.nome,
-        c.nome AS categoria,
-        l.descricao,
-        l.aumento,
-        l.material,
-        l.quantidade,
-        l.estado,
-        l.imagem,
-        l.observacoes,
-        CASE
-          WHEN c.nome = 'Histologia' THEN '🔬'
-          WHEN c.nome = 'Botânica' THEN '🌱'
-          WHEN c.nome = 'Microbiologia' THEN '🦠'
-          WHEN c.nome = 'Citologia' THEN '🧫'
-          ELSE '🧪'
-        END AS icone
-      FROM laminas l
-      INNER JOIN categorias c ON l.categoria_id = c.id
-      ORDER BY l.id;
-    `);
+    const resultado = await pool.query(
+      `${consultaLaminas} ORDER BY l.id`
+    );
 
     res.json(resultado.rows);
 
@@ -74,7 +88,10 @@ app.get('/api/laminas', async (req, res) => {
   }
 });
 
+// ==========================================
 // BUSCAR UMA LÂMINA PELO ID
+// ==========================================
+
 app.get('/api/laminas/:id', async (req, res) => {
   const id = Number(req.params.id);
 
@@ -85,30 +102,10 @@ app.get('/api/laminas/:id', async (req, res) => {
   }
 
   try {
-    const resultado = await pool.query(`
-      SELECT
-        l.id,
-        l.codigo,
-        l.nome,
-        c.nome AS categoria,
-        l.descricao,
-        l.aumento,
-        l.material,
-        l.quantidade,
-        l.estado,
-        l.imagem,
-        l.observacoes,
-        CASE
-          WHEN c.nome = 'Histologia' THEN '🔬'
-          WHEN c.nome = 'Botânica' THEN '🌱'
-          WHEN c.nome = 'Microbiologia' THEN '🦠'
-          WHEN c.nome = 'Citologia' THEN '🧫'
-          ELSE '🧪'
-        END AS icone
-      FROM laminas l
-      INNER JOIN categorias c ON l.categoria_id = c.id
-      WHERE l.id = $1;
-    `, [id]);
+    const resultado = await pool.query(
+      `${consultaLaminas} WHERE l.id = $1`,
+      [id]
+    );
 
     if (resultado.rows.length === 0) {
       return res.status(404).json({
@@ -127,24 +124,50 @@ app.get('/api/laminas/:id', async (req, res) => {
   }
 });
 
+// ==========================================
 // CADASTRAR UMA LÂMINA
+// ==========================================
+
 app.post('/api/laminas', async (req, res) => {
   const {
     codigo,
     nome,
+    nome_cientifico,
     categoria,
+    tipo_material_biologico,
     descricao,
     material,
     aumento,
+    numero_patrimonio,
     quantidade,
-    estado,
+    origem,
+    estruturas_observadas,
+    estado_conservacao,
     imagem,
+    local,
+    referencias_bibliograficas,
     observacoes
   } = req.body;
 
   if (!codigo || !nome || !categoria) {
     return res.status(400).json({
       mensagem: 'Código, nome e categoria são obrigatórios.'
+    });
+  }
+
+  const estadosPermitidos = [
+    'Novo',
+    'Regular',
+    'Velho',
+    'Danificado'
+  ];
+
+  if (
+    estado_conservacao &&
+    !estadosPermitidos.includes(estado_conservacao)
+  ) {
+    return res.status(400).json({
+      mensagem: 'Estado de conservação inválido.'
     });
   }
 
@@ -164,30 +187,52 @@ app.post('/api/laminas', async (req, res) => {
 
     const resultado = await pool.query(`
       INSERT INTO laminas (
-        codigo, nome, categoria_id, descricao, material,
-        aumento, quantidade, estado, imagem, observacoes
+        codigo,
+        nome,
+        nome_cientifico,
+        categoria_id,
+        tipo_material_biologico,
+        descricao,
+        material,
+        aumento,
+        numero_patrimonio,
+        quantidade,
+        origem,
+        estruturas_observadas,
+        estado_conservacao,
+        imagem,
+        local,
+        referencias_bibliograficas,
+        observacoes
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9,
+        $10, $11, $12, $13, $14, $15, $16, $17
+      )
       RETURNING *;
     `, [
       codigo,
       nome,
+      nome_cientifico || null,
       categoriaId,
+      tipo_material_biologico || null,
       descricao || null,
       material || null,
       aumento || null,
+      numero_patrimonio || null,
       quantidade ?? 0,
-      estado || null,
+      origem || null,
+      estruturas_observadas || null,
+      estado_conservacao || null,
       imagem || null,
+      local || null,
+      referencias_bibliograficas || null,
       observacoes || null
     ]);
 
     res.status(201).json({
       mensagem: 'Lâmina cadastrada com sucesso!',
-      lamina: {
-        ...resultado.rows[0],
-        categoria
-      }
+      lamina: resultado.rows[0]
     });
 
   } catch (erro) {
@@ -205,7 +250,10 @@ app.post('/api/laminas', async (req, res) => {
   }
 });
 
+// ==========================================
 // EDITAR UMA LÂMINA
+// ==========================================
+
 app.put('/api/laminas/:id', async (req, res) => {
   const id = Number(req.params.id);
 
@@ -216,13 +264,44 @@ app.put('/api/laminas/:id', async (req, res) => {
   }
 
   const {
-    codigo, nome, categoria, descricao, material,
-    aumento, quantidade, estado, imagem, observacoes
+    codigo,
+    nome,
+    nome_cientifico,
+    categoria,
+    tipo_material_biologico,
+    descricao,
+    material,
+    aumento,
+    numero_patrimonio,
+    quantidade,
+    origem,
+    estruturas_observadas,
+    estado_conservacao,
+    imagem,
+    local,
+    referencias_bibliograficas,
+    observacoes
   } = req.body;
 
   if (!codigo || !nome || !categoria) {
     return res.status(400).json({
       mensagem: 'Código, nome e categoria são obrigatórios.'
+    });
+  }
+
+  const estadosPermitidos = [
+    'Novo',
+    'Regular',
+    'Velho',
+    'Danificado'
+  ];
+
+  if (
+    estado_conservacao &&
+    !estadosPermitidos.includes(estado_conservacao)
+  ) {
+    return res.status(400).json({
+      mensagem: 'Estado de conservação inválido.'
     });
   }
 
@@ -245,26 +324,40 @@ app.put('/api/laminas/:id', async (req, res) => {
       SET
         codigo = $1,
         nome = $2,
-        categoria_id = $3,
-        descricao = $4,
-        material = $5,
-        aumento = $6,
-        quantidade = $7,
-        estado = $8,
-        imagem = $9,
-        observacoes = $10
-      WHERE id = $11
+        nome_cientifico = $3,
+        categoria_id = $4,
+        tipo_material_biologico = $5,
+        descricao = $6,
+        material = $7,
+        aumento = $8,
+        numero_patrimonio = $9,
+        quantidade = $10,
+        origem = $11,
+        estruturas_observadas = $12,
+        estado_conservacao = $13,
+        imagem = $14,
+        local = $15,
+        referencias_bibliograficas = $16,
+        observacoes = $17
+      WHERE id = $18
       RETURNING *;
     `, [
       codigo,
       nome,
+      nome_cientifico || null,
       categoriaId,
+      tipo_material_biologico || null,
       descricao || null,
       material || null,
       aumento || null,
+      numero_patrimonio || null,
       quantidade ?? 0,
-      estado || null,
+      origem || null,
+      estruturas_observadas || null,
+      estado_conservacao || null,
       imagem || null,
+      local || null,
+      referencias_bibliograficas || null,
       observacoes || null,
       id
     ]);
@@ -277,10 +370,7 @@ app.put('/api/laminas/:id', async (req, res) => {
 
     res.json({
       mensagem: 'Lâmina atualizada com sucesso!',
-      lamina: {
-        ...resultado.rows[0],
-        categoria
-      }
+      lamina: resultado.rows[0]
     });
 
   } catch (erro) {
@@ -298,7 +388,10 @@ app.put('/api/laminas/:id', async (req, res) => {
   }
 });
 
+// ==========================================
 // EXCLUIR UMA LÂMINA
+// ==========================================
+
 app.delete('/api/laminas/:id', async (req, res) => {
   const id = Number(req.params.id);
 
@@ -338,7 +431,6 @@ app.delete('/api/laminas/:id', async (req, res) => {
 // ROTAS DE CATEGORIAS
 // ==========================================
 
-// LISTAR TODAS AS CATEGORIAS
 app.get('/api/categorias', async (req, res) => {
   try {
     const resultado = await pool.query(
@@ -356,7 +448,6 @@ app.get('/api/categorias', async (req, res) => {
   }
 });
 
-// CADASTRAR UMA CATEGORIA
 app.post('/api/categorias', async (req, res) => {
   const { nome, descricao } = req.body;
 
@@ -394,7 +485,6 @@ app.post('/api/categorias', async (req, res) => {
   }
 });
 
-// EDITAR UMA CATEGORIA
 app.put('/api/categorias/:id', async (req, res) => {
   const id = Number(req.params.id);
   const { nome, descricao } = req.body;
@@ -446,7 +536,6 @@ app.put('/api/categorias/:id', async (req, res) => {
   }
 });
 
-// EXCLUIR UMA CATEGORIA
 app.delete('/api/categorias/:id', async (req, res) => {
   const id = Number(req.params.id);
 

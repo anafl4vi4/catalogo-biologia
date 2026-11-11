@@ -73,13 +73,20 @@ export class Cadastro implements OnInit {
     return {
       codigo: '',
       nome: '',
+      nome_cientifico: '',
       categoria: '',
+      tipo_material_biologico: '',
       descricao: '',
       material: '',
       aumento: '',
+      numero_patrimonio: '',
       quantidade: 0,
-      estado: 'Disponível',
+      origem: '',
+      estruturas_observadas: '',
+      estado_conservacao: 'Novo',
       imagem: '',
+      local: '',
+      referencias_bibliograficas: '',
       observacoes: ''
     };
   }
@@ -104,15 +111,12 @@ export class Cadastro implements OnInit {
       next: (categorias) => {
         this.categorias = categorias;
         this.carregandoCategorias = false;
-
         this.cdr.markForCheck();
       },
       error: (erro) => {
         console.error('Erro ao listar categorias:', erro);
-
         this.erro = 'Não foi possível carregar as categorias.';
         this.carregandoCategorias = false;
-
         this.cdr.markForCheck();
       }
     });
@@ -126,15 +130,12 @@ export class Cadastro implements OnInit {
       next: (laminas) => {
         this.laminas = laminas;
         this.carregandoLaminas = false;
-
         this.cdr.markForCheck();
       },
       error: (erro) => {
         console.error('Erro ao listar lâminas:', erro);
-
         this.erro = 'Não foi possível carregar as lâminas.';
         this.carregandoLaminas = false;
-
         this.cdr.markForCheck();
       }
     });
@@ -143,6 +144,14 @@ export class Cadastro implements OnInit {
   // Cadastra ou atualiza uma lâmina.
   cadastrar(): void {
     this.limparMensagens();
+
+    if (!this.lamina.codigo.trim() ||
+        !this.lamina.nome.trim() ||
+        !this.lamina.categoria.trim()) {
+      this.erro = 'Preencha o código, o nome e a categoria da lâmina.';
+      return;
+    }
+
     this.salvando = true;
 
     const dados = { ...this.lamina };
@@ -176,35 +185,39 @@ export class Cadastro implements OnInit {
     });
   }
 
-  // Prepara uma lâmina para edição.
+  // Preenche o formulário com os dados da lâmina selecionada.
   editarLamina(lamina: Lamina): void {
     this.limparMensagens();
-
     this.laminaEditandoId = lamina.id;
 
     this.lamina = {
       codigo: lamina.codigo || '',
       nome: lamina.nome || '',
+      nome_cientifico: lamina.nome_cientifico || '',
       categoria: lamina.categoria || '',
+      tipo_material_biologico: lamina.tipo_material_biologico || '',
       descricao: lamina.descricao || '',
       material: lamina.material || '',
       aumento: lamina.aumento || '',
+      numero_patrimonio: lamina.numero_patrimonio || '',
       quantidade: lamina.quantidade ?? 0,
-      estado: lamina.estado || 'Disponível',
+      origem: lamina.origem || '',
+      estruturas_observadas: lamina.estruturas_observadas || '',
+      estado_conservacao: lamina.estado_conservacao || 'Novo',
       imagem: lamina.imagem || '',
+      local: lamina.local || '',
+      referencias_bibliograficas: lamina.referencias_bibliograficas || '',
       observacoes: lamina.observacoes || ''
     };
 
     this.abaAtiva = 'laminas';
-
     this.cdr.markForCheck();
   }
 
-  // Cancela a edição da lâmina.
+  // Cancela a edição ou limpa o formulário.
   cancelarEdicaoLamina(): void {
     this.lamina = this.novaLamina();
     this.laminaEditandoId = null;
-
     this.cdr.markForCheck();
   }
 
@@ -214,9 +227,7 @@ export class Cadastro implements OnInit {
       'Tem certeza de que deseja excluir esta lâmina?'
     );
 
-    if (!confirmar) {
-      return;
-    }
+    if (!confirmar) return;
 
     this.limparMensagens();
 
@@ -234,10 +245,8 @@ export class Cadastro implements OnInit {
       },
       error: (erro) => {
         console.error('Erro ao excluir lâmina:', erro);
-
         this.erro = erro.error?.mensagem ||
           'Não foi possível excluir a lâmina.';
-
         this.cdr.markForCheck();
       }
     });
@@ -271,26 +280,22 @@ export class Cadastro implements OnInit {
 
         this.salvando = false;
         this.limparFormularioCategoria();
-
         this.cdr.markForCheck();
         this.listarCategorias();
       },
       error: (erro) => {
         console.error('Erro ao salvar categoria:', erro);
-
         this.erro = erro.error?.mensagem ||
           'Não foi possível salvar a categoria.';
-
         this.salvando = false;
         this.cdr.markForCheck();
       }
     });
   }
 
-  // Prepara uma categoria para edição.
+  // Preenche o formulário com os dados da categoria selecionada.
   editarCategoria(categoria: Categoria): void {
     this.limparMensagens();
-
     this.categoriaEditandoId = categoria.id;
 
     this.categoria = {
@@ -299,7 +304,6 @@ export class Cadastro implements OnInit {
     };
 
     this.abaAtiva = 'categorias';
-
     this.cdr.markForCheck();
   }
 
@@ -307,7 +311,6 @@ export class Cadastro implements OnInit {
   cancelarEdicao(): void {
     this.limparFormularioCategoria();
     this.limparMensagens();
-
     this.cdr.markForCheck();
   }
 
@@ -317,9 +320,7 @@ export class Cadastro implements OnInit {
       'Tem certeza de que deseja excluir esta categoria?'
     );
 
-    if (!confirmar) {
-      return;
-    }
+    if (!confirmar) return;
 
     this.limparMensagens();
 
@@ -327,22 +328,19 @@ export class Cadastro implements OnInit {
       next: (resposta) => {
         this.mensagem = resposta.mensagem ||
           'Categoria excluída com sucesso!';
-
         this.cdr.markForCheck();
         this.listarCategorias();
       },
       error: (erro) => {
         console.error('Erro ao excluir categoria:', erro);
-
         this.erro = erro.error?.mensagem ||
           'Não foi possível excluir a categoria.';
-
         this.cdr.markForCheck();
       }
     });
   }
 
-  // Limpa o formulário de categorias.
+  // Limpa o formulário de categoria.
   limparFormularioCategoria(): void {
     this.categoria = {
       nome: '',

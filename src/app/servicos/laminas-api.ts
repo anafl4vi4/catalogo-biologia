@@ -7,16 +7,40 @@ export interface Lamina {
   id: number;
   codigo: string;
   nome: string;
+  nome_cientifico: string | null;
   categoria: string;
-  descricao: string;
-  aumento: string;
-  material: string;
+  tipo_material_biologico: string | null;
+
+  descricao: string | null;
+  material: string | null;
+  aumento: string | null;
+
+  numero_patrimonio: string | null;
   quantidade: number;
-  estado: string;
-  imagem: string;
-  observacoes: string;
+
+  data_cadastro: string;
+  ultima_atualizacao: string;
+  responsavel_cadastro_id: number | null;
+
+  origem: string | null;
+  estruturas_observadas: string | null;
+  estado_conservacao: string | null;
+  imagem: string | null;
+  local: string | null;
+  referencias_bibliograficas: string | null;
+  observacoes: string | null;
+
   icone: string;
 }
+
+export type DadosLamina = Omit<
+  Lamina,
+  | 'id'
+  | 'icone'
+  | 'data_cadastro'
+  | 'ultima_atualizacao'
+  | 'responsavel_cadastro_id'
+>;
 
 @Injectable({
   providedIn: 'root'
@@ -31,16 +55,15 @@ export class LaminasApi {
     return this.http.get<Lamina[]>(this.apiUrl);
   }
 
-  cadastrar(
-    lamina: Omit<Lamina, 'id' | 'icone'>
-  ): Observable<any> {
+  buscarPorId(id: number): Observable<Lamina> {
+    return this.http.get<Lamina>(`${this.apiUrl}/${id}`);
+  }
+
+  cadastrar(lamina: DadosLamina): Observable<any> {
     return this.http.post<any>(this.apiUrl, lamina);
   }
 
-  atualizar(
-    id: number,
-    lamina: Omit<Lamina, 'id' | 'icone'>
-  ): Observable<any> {
+  atualizar(id: number, lamina: DadosLamina): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/${id}`, lamina);
   }
 
