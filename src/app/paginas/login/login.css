@@ -1,0 +1,146 @@
+
+.pagina-login {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 20px;
+  background: #f3f7f3;
+}
+
+.cartao-login {
+  width: 100%;
+  max-width: 430px;
+  padding: 42px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 35px;
+  color: #276b45;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.icone {
+  font-size: 28px;
+}
+
+.cabecalho-login {
+  margin-bottom: 28px;
+}
+
+.tag {
+  color: #43845d;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.cabecalho-login h1 {
+  margin: 12px 0 8px;
+  color: #203c2b;
+  font-size: 28px;
+  line-height: 1.3;
+}
+
+.cabecalho-login p {
+  margin: 0;
+  color: #718075;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.campo label {
+  color: #314b39;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.campo input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px;
+  border: 1px solid #dce6dd;
+  border-radius: 9px;
+  outline: none;
+  color: #263d2e;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.campo input:focus {
+  border-color: #43845d;
+}
+
+.campo input::placeholder {
+  color: #a3aea5;
+}
+
+.mensagem-erro {
+  margin-bottom: 18px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #fff0f0;
+  color: #b52f2f;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 9px;
+  background: #34774d;
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover:not(:disabled) {
+  background: #275e3c;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.voltar {
+  display: block;
+  margin-top: 25px;
+  color: #43845d;
+  text-align: center;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.voltar:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .cartao-login {
+    padding: 28px 22px;
+  }
+
+  .cabecalho-login h1 {
+    font-size: 25px;
+  }
+}

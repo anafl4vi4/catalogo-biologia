@@ -5,27 +5,58 @@ import { Laminas } from './paginas/laminas/laminas';
 import { Inicio } from './paginas/inicio/inicio';
 import { Categorias } from './paginas/categorias/categorias';
 import { Sobre } from './paginas/sobre/sobre';
-import { Cadastro } from './paginas/cadastro/cadastro';
+import { Login } from './paginas/login/login';
+import { Admin } from './paginas/admin/admin';
+import { Usuarios } from './paginas/usuarios/usuarios';
+import { AdminLaminas } from './paginas/admin-laminas/admin-laminas';
+import { AdminCategorias } from './paginas/admin-categorias/admin-categorias';
+
+import { adminGuard } from './servicos/admin.guard';
 
 export const routes: Routes = [
+  // Páginas públicas
+  { path: '', component: Inicio },
+  { path: 'laminas', component: Laminas },
+  { path: 'categorias', component: Categorias },
+  { path: 'sobre', component: Sobre },
+
+  // Login administrativo
+  { path: 'login', component: Login },
+
+  // Painel administrativo
   {
-    path: '',
-    component: Inicio
+    path: 'admin',
+    component: Admin,
+    canActivate: [adminGuard]
   },
+
+  // Gerenciamento de lâminas
   {
-    path: 'laminas',
-    component: Laminas
+    path: 'admin/laminas',
+    component: AdminLaminas,
+    canActivate: [adminGuard]
   },
+
+  // Gerenciamento de categorias
   {
-    path: 'categorias',
-    component: Categorias
+    path: 'admin/categorias',
+    component: AdminCategorias,
+    canActivate: [adminGuard]
   },
+
+  // Gerenciamento de administradores
   {
-    path: 'sobre',
-    component: Sobre
+    path: 'usuarios',
+    component: Usuarios,
+    canActivate: [adminGuard]
   },
+
+  // Redirecionamento do endereço antigo
   {
     path: 'cadastro',
-    component: Cadastro
-  }
+    redirectTo: 'admin/laminas',
+    pathMatch: 'full'
+  },
+
+  { path: '**', redirectTo: '' }
 ];

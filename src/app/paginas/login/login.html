@@ -1,0 +1,73 @@
+
+<div class="pagina-login">
+
+  <div class="cartao-login">
+
+    <div class="marca">
+      <span class="icone">🔬</span>
+      <span>LIBRA</span>
+    </div>
+
+    <div class="cabecalho-login">
+      <span class="tag">ÁREA RESTRITA</span>
+
+      <h1>Acesso administrativo</h1>
+
+      <p>
+        Entre com suas credenciais de administrador para gerenciar
+        o acervo de lâminas do LIBRA.
+      </p>
+    </div>
+
+    <form (ngSubmit)="entrar()">
+
+      <div class="campo">
+        <label for="email">E-mail do administrador</label>
+
+        <input
+          type="email"
+          id="email"
+          name="email"
+          [(ngModel)]="email"
+          placeholder="Digite seu e-mail"
+          autocomplete="username"
+          required
+        >
+      </div>
+
+      <div class="campo">
+        <label for="senha">Senha</label>
+
+        <input
+          type="password"
+          id="senha"
+          name="senha"
+          [(ngModel)]="senha"
+          placeholder="Digite sua senha"
+          autocomplete="current-password"
+          required
+        >
+      </div>
+
+      @if (mensagemErro) {
+        <div class="mensagem-erro">
+          {{ mensagemErro }}
+        </div>
+      }
+
+      <button
+        type="submit"
+        [disabled]="carregando"
+      >
+        {{ carregando ? 'Verificando...' : 'Entrar na administração' }}
+      </button>
+
+    </form>
+
+    <a routerLink="/laminas" class="voltar">
+      ← Voltar ao catálogo
+    </a>
+
+  </div>
+
+</div>

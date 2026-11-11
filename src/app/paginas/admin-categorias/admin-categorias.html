@@ -1,0 +1,84 @@
+<app-cabecalho-admin></app-cabecalho-admin>
+
+<div class="pagina-cadastro">
+
+  <main class="conteudo">
+
+    <a routerLink="/admin" class="voltar-painel">
+      ← Voltar ao painel administrativo
+    </a>
+
+    <section class="topo-gerenciamento">
+      <span class="tag">GERENCIAMENTO DO ACERVO</span>
+      <h1>Gerenciar categorias</h1>
+      <p>Cadastre, consulte, edite e organize as categorias do catálogo.</p>
+    </section>
+
+    <p class="mensagem-sucesso" *ngIf="mensagem">{{ mensagem }}</p>
+    <p class="mensagem-erro" *ngIf="erro">{{ erro }}</p>
+
+    <section>
+      <h2>{{ categoriaEditandoId !== null ? 'Editar categoria' : 'Cadastrar nova categoria' }}</h2>
+
+      <form (ngSubmit)="salvarCategoria()" #formularioCategoria="ngForm">
+
+        <div class="campo">
+          <label for="nomeCategoria">Nome da categoria *</label>
+          <input
+            type="text"
+            id="nomeCategoria"
+            name="nomeCategoria"
+            [(ngModel)]="categoria.nome"
+            placeholder="Ex.: Citologia"
+            required
+          >
+        </div>
+
+        <div class="campo">
+          <label for="descricaoCategoria">Descrição</label>
+          <textarea
+            id="descricaoCategoria"
+            name="descricaoCategoria"
+            [(ngModel)]="categoria.descricao"
+            placeholder="Descreva o conteúdo desta categoria..."
+            rows="4"
+          ></textarea>
+        </div>
+
+        <button type="submit" [disabled]="formularioCategoria.invalid || salvando">
+          {{ salvando ? 'Salvando...' : categoriaEditandoId !== null ? 'Salvar alterações' : 'Cadastrar categoria' }}
+        </button>
+
+        <button
+          *ngIf="categoriaEditandoId !== null"
+          type="button"
+          (click)="cancelarEdicao()"
+        >
+          Cancelar edição
+        </button>
+      </form>
+    </section>
+
+    <section class="lista-categorias">
+      <h2>Categorias cadastradas</h2>
+
+      <p *ngIf="carregandoCategorias">Carregando categorias...</p>
+      <p *ngIf="!carregandoCategorias && categorias.length === 0">
+        Nenhuma categoria cadastrada.
+      </p>
+
+      <article class="categoria-item" *ngFor="let item of categorias">
+        <div>
+          <h3>{{ item.nome }}</h3>
+          <p>{{ item.descricao || 'Sem descrição.' }}</p>
+        </div>
+
+        <div class="acoes-categoria">
+          <button type="button" (click)="editarCategoria(item)">Editar</button>
+          <button type="button" (click)="excluirCategoria(item.id)">Excluir</button>
+        </div>
+      </article>
+    </section>
+
+  </main>
+</div>

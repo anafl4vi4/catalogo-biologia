@@ -1,0 +1,71 @@
+
+<app-cabecalho-admin></app-cabecalho-admin>
+
+<div class="pagina-admin">
+
+  <main class="conteudo-admin">
+
+    <section class="apresentacao">
+      <span class="tag">PAINEL DE CONTROLE</span>
+
+      <h1>Área administrativa</h1>
+
+      <p>
+        Bem-vindo ao gerenciamento do LIBRA.
+        Escolha uma das opções abaixo para administrar o acervo.
+      </p>
+    </section>
+
+    <section class="opcoes-admin">
+
+      <a routerLink="/admin/laminas" class="card-admin">
+        <div class="icone">🔬</div>
+
+        <div>
+          <h2>Gerenciar lâminas</h2>
+          <p>
+            Cadastrar novas lâminas, editar informações
+            e administrar os registros existentes.
+          </p>
+        </div>
+
+        <span class="seta">→</span>
+      </a>
+
+      <a routerLink="/admin/categorias" class="card-admin">
+        <div class="icone">🗂️</div>
+
+        <div>
+          <h2>Gerenciar categorias</h2>
+          <p>
+            Cadastrar, editar, excluir e organizar
+            as categorias do catálogo.
+          </p>
+        </div>
+
+        <span class="seta">→</span>
+      </a>
+
+      <a routerLink="/usuarios" class="card-admin">
+        <div class="icone">👥</div>
+
+        <div>
+          <h2>Gerenciar administradores</h2>
+          <p>
+            Cadastrar novos administradores e gerenciar
+            as contas administrativas.
+          </p>
+        </div>
+
+        <span class="seta">→</span>
+      </a>
+
+    </section>
+
+  </main>
+
+  <footer class="rodape-admin">
+    LIBRA — Sistema de gerenciamento do acervo biológico
+  </footer>
+
+</div>

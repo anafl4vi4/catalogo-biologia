@@ -1,0 +1,176 @@
+
+<app-cabecalho-admin></app-cabecalho-admin>
+
+<div class="pagina-usuarios">
+
+  <main class="conteudo">
+
+    <a routerLink="/admin" class="voltar-painel">
+      ← Voltar ao painel administrativo
+    </a>
+
+    <section class="cabecalho">
+      <span class="tag">ADMINISTRAÇÃO DO SISTEMA</span>
+
+      <h1>Gerenciar administradores</h1>
+
+      <p>
+        Cadastre novos administradores e controle quem tem
+        permissão para gerenciar o acervo do LIBRA.
+      </p>
+    </section>
+
+    <section class="cartao formulario">
+      <div class="titulo-secao">
+        <div class="icone">👤</div>
+
+        <div>
+          <h2>Novo administrador</h2>
+          <p>Preencha os dados para criar uma nova conta administrativa.</p>
+        </div>
+      </div>
+
+      <form (ngSubmit)="cadastrarAdministrador()">
+
+        <div class="campo">
+          <label for="nome">Nome completo</label>
+          <input
+            id="nome"
+            name="nome"
+            type="text"
+            [(ngModel)]="nome"
+            placeholder="Digite o nome do administrador"
+            required
+          >
+        </div>
+
+        <div class="campo">
+          <label for="email">E-mail</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            [(ngModel)]="email"
+            placeholder="Digite o e-mail"
+            autocomplete="off"
+            required
+          >
+        </div>
+
+        <div class="campo">
+          <label for="senha">Senha</label>
+          <input
+            id="senha"
+            name="senha"
+            type="password"
+            [(ngModel)]="senha"
+            placeholder="Mínimo de 8 caracteres"
+            autocomplete="new-password"
+            minlength="8"
+            required
+          >
+        </div>
+
+        @if (mensagemErro) {
+          <div class="mensagem erro">
+            {{ mensagemErro }}
+          </div>
+        }
+
+        @if (mensagemSucesso) {
+          <div class="mensagem sucesso">
+            {{ mensagemSucesso }}
+          </div>
+        }
+
+        <button type="submit" [disabled]="salvando">
+          {{ salvando ? 'Cadastrando...' : 'Cadastrar administrador' }}
+        </button>
+
+      </form>
+    </section>
+
+    <section class="cartao lista">
+
+      <div class="titulo-lista">
+        <div>
+          <h2>Administradores cadastrados</h2>
+          <p>Contas com permissão para acessar a administração.</p>
+        </div>
+
+        <button
+          type="button"
+          class="botao-atualizar"
+          (click)="listarAdministradores()"
+          [disabled]="carregando"
+        >
+          ↻ Atualizar
+        </button>
+      </div>
+
+      @if (carregando) {
+        <p class="estado-lista">Carregando administradores...</p>
+      } @else if (administradores.length === 0) {
+        <p class="estado-lista">
+          Nenhum administrador encontrado.
+        </p>
+      } @else {
+        <div class="tabela-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Tipo de conta</th>
+                <th>Ação</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (usuario of administradores; track usuario.id) {
+                <tr>
+                  <td>
+                    <strong>{{ usuario.nome }}</strong>
+
+                    @if (usuario.id === usuarioAtualId) {
+                      <span class="voce">Você</span>
+                    }
+                  </td>
+
+                  <td>{{ usuario.email }}</td>
+
+                  <td>
+                    <span class="tipo-admin">ADMIN</span>
+                  </td>
+
+                  <td>
+                    @if (usuario.id === usuarioAtualId) {
+                      <span class="conta-atual">
+                        Conta atual
+                      </span>
+                    } @else {
+                      <button
+                        type="button"
+                        class="botao-excluir"
+                        (click)="excluirAdministrador(usuario)"
+                      >
+                        Excluir
+                      </button>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+    </section>
+
+  </main>
+
+  <footer class="rodape">
+    LIBRA — Gerenciamento de administradores
+  </footer>
+
+</div>

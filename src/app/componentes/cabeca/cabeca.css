@@ -1,6 +1,16 @@
+
+* {
+  box-sizing: border-box;
+}
+
+:host {
+  display: block;
+  width: 100%;
+}
+
 .header {
   width: 100%;
-  height: 72px;
+  min-height: 72px;
   padding: 0 8%;
   background: #ffffff;
   display: flex;
@@ -37,11 +47,48 @@
 .menu a:hover {
   color: #15803d;
 }
-* {
-  box-sizing: border-box;
+
+.menu .gerenciar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 16px;
+  border: 1px solid #15803d;
+  border-radius: 8px;
+  color: #166534;
+  font-weight: 600;
+  transition: 0.2s;
 }
 
-:host {
-  display: block;
-  width: 100%;
+.menu .gerenciar:hover {
+  background: #15803d;
+  color: #ffffff;
+}
+
+@media (max-width: 850px) {
+  .header {
+    padding: 16px 5%;
+    height: auto;
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+
+  .menu {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 500px) {
+  .menu {
+    gap: 12px;
+  }
+
+  .menu a {
+    font-size: 13px;
+  }
+
+  .menu .gerenciar {
+    padding: 8px 10px;
+  }
 }

@@ -1,0 +1,191 @@
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #f3f7f3;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.pagina-admin {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.topo-admin {
+  min-height: 72px;
+  padding: 0 8%;
+  background: #ffffff;
+  border-bottom: 1px solid #e5ebe7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  color: #166534;
+  font-size: 27px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.acoes-topo {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.voltar {
+  color: #475569;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.voltar:hover {
+  color: #15803d;
+}
+
+.botao-sair {
+  padding: 9px 18px;
+  border: 1px solid #dce6dd;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #475569;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.botao-sair:hover {
+  border-color: #b52f2f;
+  color: #b52f2f;
+}
+
+.conteudo-admin {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 65px 25px;
+  flex: 1;
+}
+
+.apresentacao {
+  margin-bottom: 38px;
+}
+
+.tag {
+  color: #43845d;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.apresentacao h1 {
+  margin: 12px 0;
+  color: #203c2b;
+  font-size: 34px;
+}
+
+.apresentacao p {
+  max-width: 600px;
+  margin: 0;
+  color: #718075;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.opcoes-admin {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.card-admin {
+  min-height: 175px;
+  padding: 25px;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #e5ebe7;
+  border-radius: 13px;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.card-admin:hover {
+  border-color: #43845d;
+  box-shadow: 0 6px 20px rgba(22, 101, 52, 0.08);
+  transform: translateY(-3px);
+}
+
+.icone {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #edf6ef;
+  border-radius: 11px;
+  font-size: 24px;
+}
+
+.card-admin h2 {
+  margin: 2px 0 9px;
+  color: #203c2b;
+  font-size: 18px;
+}
+
+.card-admin p {
+  margin: 0;
+  color: #718075;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.seta {
+  position: absolute;
+  right: 22px;
+  bottom: 18px;
+  color: #43845d;
+  font-size: 22px;
+}
+
+.rodape-admin {
+  padding: 22px;
+  background: #ffffff;
+  border-top: 1px solid #e5ebe7;
+  color: #718075;
+  text-align: center;
+  font-size: 12px;
+}
+
+@media (max-width: 650px) {
+  .topo-admin {
+    padding: 15px 5%;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .acoes-topo {
+    gap: 12px;
+  }
+
+  .opcoes-admin {
+    grid-template-columns: 1fr;
+  }
+
+  .conteudo-admin {
+    padding: 40px 20px;
+  }
+
+  .apresentacao h1 {
+    font-size: 28px;
+  }
+}
