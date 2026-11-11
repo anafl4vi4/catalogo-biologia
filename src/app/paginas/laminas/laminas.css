@@ -1,3 +1,4 @@
+
 /* ===== CONFIGURAÇÕES GERAIS ===== */
 
 :host {
@@ -110,14 +111,22 @@
   border-radius: 20px;
   background: #ffffff;
   box-shadow: 0 4px 14px rgba(27, 61, 38, 0.04);
+  cursor: pointer;
   transition: transform 0.22s ease, box-shadow 0.22s ease,
     border-color 0.22s ease;
 }
 
-.lamina-card:hover {
+.lamina-card:hover,
+.lamina-card:focus-visible {
   transform: translateY(-5px);
   border-color: #c8dfcd;
   box-shadow: 0 14px 32px rgba(27, 61, 38, 0.09);
+  outline: none;
+}
+
+.lamina-card:focus-visible {
+  outline: 3px solid rgba(39, 131, 74, 0.35);
+  outline-offset: 3px;
 }
 
 .imagem-lamina {
@@ -128,6 +137,13 @@
   padding: 24px;
   background: linear-gradient(135deg, #eaf5ec, #f5f9f5);
   font-size: 54px;
+}
+
+.imagem-lamina img {
+  width: 100%;
+  max-height: 190px;
+  object-fit: contain;
+  border-radius: 10px;
 }
 
 .informacoes {
@@ -165,7 +181,7 @@
   line-height: 1.8;
 }
 
-/* ===== DETALHES DAS LÂMINAS ===== */
+/* ===== DETALHES DOS CARDS ===== */
 
 .detalhes {
   display: flex;
@@ -187,6 +203,13 @@
   color: #4e6253;
   font-size: 12px;
   font-weight: 600;
+}
+
+.ver-detalhes {
+  margin-top: 18px;
+  color: #267342;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 /* ===== NENHUM RESULTADO ===== */
@@ -213,6 +236,270 @@
   line-height: 1.7;
 }
 
+/* =========================================
+   MODAL DE DETALHES DA LÂMINA
+========================================= */
+
+/* Fundo escuro que mantém o catálogo visível */
+
+.modal-fundo {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(16, 35, 23, 0.66);
+  backdrop-filter: blur(3px);
+  overflow-y: auto;
+  animation: aparecer-fundo 0.2s ease;
+}
+
+/* Card principal */
+
+.modal-detalhes {
+  position: relative;
+  width: min(850px, 100%);
+  max-height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #e1ebe2;
+  border-radius: 22px;
+  background: #ffffff;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+  animation: aparecer-modal 0.25s ease;
+}
+
+/* Cabeçalho do modal */
+
+.modal-cabecalho {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 26px;
+  border-bottom: 1px solid #e9efe9;
+  background: #ffffff;
+}
+
+.botao-voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  border: 1px solid #dce8de;
+  border-radius: 10px;
+  background: #f3f8f4;
+  color: #267342;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.botao-voltar:hover {
+  border-color: #a9cbb0;
+  background: #e7f3e9;
+}
+
+.botao-fechar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: #f1f5f1;
+  color: #405846;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.botao-fechar:hover {
+  background: #e4eee5;
+  color: #193d29;
+}
+
+/* Conteúdo com rolagem própria */
+
+.modal-conteudo {
+  padding: 30px;
+  overflow-y: auto;
+}
+
+/* Identificação principal */
+
+.detalhe-principal {
+  display: grid;
+  grid-template-columns: minmax(180px, 270px) minmax(0, 1fr);
+  align-items: center;
+  gap: 28px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #e9efe9;
+}
+
+.detalhe-imagem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 210px;
+  padding: 18px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #eaf5ec, #f5f9f5);
+  color: #267342;
+  font-size: 76px;
+}
+
+.detalhe-imagem img {
+  width: 100%;
+  max-height: 250px;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.detalhe-identificacao .categoria {
+  margin-bottom: 14px;
+}
+
+.detalhe-identificacao h1 {
+  margin: 0 0 10px;
+  color: #193d29;
+  font-size: clamp(25px, 4vw, 34px);
+  line-height: 1.25;
+}
+
+.nome-cientifico {
+  margin: 0 0 16px;
+  color: #718074;
+  font-size: 15px;
+  font-style: italic;
+}
+
+.codigo-lamina {
+  display: inline-block;
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #f2f6f2;
+  color: #526557;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+/* Grupos de informações */
+
+.grupo-informacoes {
+  padding: 27px 0;
+  border-bottom: 1px solid #e9efe9;
+}
+
+.grupo-informacoes:last-child {
+  border-bottom: none;
+}
+
+.grupo-informacoes h2 {
+  margin: 0 0 20px;
+  color: #23452e;
+  font-size: 19px;
+  font-weight: 750;
+}
+
+/* Grade dos campos */
+
+.grade-informacoes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.informacao {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid #e8eee8;
+  border-radius: 12px;
+  background: #f8faf8;
+}
+
+.informacao span,
+.texto-informacao span {
+  color: #718074;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.informacao strong {
+  color: #294532;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+/* Campos com textos maiores */
+
+.texto-informacao {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid #e8eee8;
+  border-radius: 12px;
+  background: #f8faf8;
+}
+
+.texto-informacao p {
+  margin: 9px 0 0;
+  color: #405846;
+  font-size: 14px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+/* Rodapé */
+
+.modal-rodape {
+  display: flex;
+  justify-content: flex-end;
+  padding: 18px 26px;
+  border-top: 1px solid #e9efe9;
+  background: #ffffff;
+}
+
+/* Animações */
+
+@keyframes aparecer-fundo {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes aparecer-modal {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 /* ===== TABLETS ===== */
 
 @media (max-width: 760px) {
@@ -231,6 +518,28 @@
 
   .informacoes h2 {
     font-size: 19px;
+  }
+
+  .modal-fundo {
+    padding: 16px;
+  }
+
+  .modal-detalhes {
+    max-height: calc(100vh - 32px);
+  }
+
+  .modal-conteudo {
+    padding: 24px;
+  }
+
+  .detalhe-principal {
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .detalhe-imagem {
+    min-height: 180px;
+    font-size: 60px;
   }
 }
 
@@ -279,11 +588,64 @@
   .detalhes {
     gap: 8px;
   }
+
+  /* Modal em telas pequenas */
+
+  .modal-fundo {
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .modal-detalhes {
+    max-height: calc(100vh - 20px);
+    border-radius: 16px;
+  }
+
+  .modal-cabecalho {
+    padding: 13px 15px;
+  }
+
+  .modal-conteudo {
+    padding: 18px;
+  }
+
+  .detalhe-principal {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .detalhe-imagem {
+    min-height: 160px;
+    font-size: 58px;
+  }
+
+  .detalhe-identificacao h1 {
+    font-size: 25px;
+  }
+
+  .grade-informacoes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .grupo-informacoes {
+    padding: 22px 0;
+  }
+
+  .grupo-informacoes h2 {
+    font-size: 17px;
+  }
+
+  .modal-rodape {
+    padding: 14px 18px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .lamina-card,
-  .filtros select {
+  .filtros select,
+  .modal-fundo,
+  .modal-detalhes {
+    animation: none;
     transition: none;
   }
 

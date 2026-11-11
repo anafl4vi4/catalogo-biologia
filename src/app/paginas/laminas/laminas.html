@@ -43,6 +43,7 @@
 
   </section>
 
+  <!-- CATÁLOGO -->
   <section class="catalogo">
 
     @if (carregandoLaminas) {
@@ -64,10 +65,25 @@
 
       @for (lamina of laminasFiltradas; track lamina.id) {
 
-        <div class="lamina-card">
+        <article
+          class="lamina-card"
+          role="button"
+          tabindex="0"
+          [attr.aria-label]="'Ver detalhes de ' + lamina.nome"
+          (click)="abrirDetalhes(lamina)"
+          (keydown.enter)="abrirDetalhes(lamina)"
+          (keydown.space)="$event.preventDefault(); abrirDetalhes(lamina)"
+        >
 
           <div class="imagem-lamina">
-            {{ lamina.icone || '🔬' }}
+            @if (lamina.imagem) {
+              <img
+                [src]="lamina.imagem"
+                [alt]="'Imagem da lâmina ' + lamina.nome"
+              >
+            } @else {
+              {{ lamina.icone || '🔬' }}
+            }
           </div>
 
           <div class="informacoes">
@@ -78,16 +94,20 @@
 
             <h2>{{ lamina.nome }}</h2>
 
-            <p>{{ lamina.descricao }}</p>
+            <p>{{ lamina.descricao || 'Sem descrição disponível.' }}</p>
 
             <div class="detalhes">
-              <span>🔍 {{ lamina.aumento }}</span>
-              <span>🧪 {{ lamina.material }}</span>
+              <span>🔍 {{ lamina.aumento || 'Aumento não informado' }}</span>
+              <span>🧪 {{ lamina.material || 'Material não informado' }}</span>
             </div>
+
+            <span class="ver-detalhes">
+              Ver detalhes completos →
+            </span>
 
           </div>
 
-        </div>
+        </article>
 
       } @empty {
 
@@ -106,3 +126,231 @@
   </section>
 
 </div>
+
+<!-- MODAL DE DETALHES DA LÂMINA -->
+@if (laminaSelecionada) {
+
+  <div
+    class="modal-fundo"
+    (click)="voltarAoCatalogo()"
+  >
+
+    <article
+      class="modal-detalhes"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-detalhes"
+      (click)="$event.stopPropagation()"
+    >
+
+      <!-- CABEÇALHO DO MODAL -->
+      <header class="modal-cabecalho">
+
+        <button
+          type="button"
+          class="botao-voltar"
+          (click)="voltarAoCatalogo()"
+        >
+          ← Voltar ao catálogo
+        </button>
+
+        <button
+          type="button"
+          class="botao-fechar"
+          aria-label="Fechar detalhes"
+          (click)="voltarAoCatalogo()"
+        >
+          ×
+        </button>
+
+      </header>
+
+      <!-- IDENTIFICAÇÃO -->
+      <div class="modal-conteudo">
+
+        <section class="detalhe-principal">
+
+          <div class="detalhe-imagem">
+
+            @if (laminaSelecionada.imagem) {
+              <img
+                [src]="laminaSelecionada.imagem"
+                [alt]="'Imagem da lâmina ' + laminaSelecionada.nome"
+              >
+            } @else {
+              <span>{{ laminaSelecionada.icone || '🔬' }}</span>
+            }
+
+          </div>
+
+          <div class="detalhe-identificacao">
+
+            <span class="categoria">
+              {{ laminaSelecionada.categoria }}
+            </span>
+
+            <h1 id="titulo-detalhes">
+              {{ laminaSelecionada.nome }}
+            </h1>
+
+            <p class="nome-cientifico">
+              {{ laminaSelecionada.nome_cientifico || 'Nome científico não informado' }}
+            </p>
+
+            <p class="codigo-lamina">
+              Código: {{ laminaSelecionada.codigo }}
+            </p>
+
+          </div>
+
+        </section>
+
+        <!-- CARACTERÍSTICAS BIOLÓGICAS -->
+        <section class="grupo-informacoes">
+
+          <h2>Características biológicas</h2>
+
+          <div class="grade-informacoes">
+
+            <div class="informacao">
+              <span>Categoria</span>
+              <strong>{{ laminaSelecionada.categoria }}</strong>
+            </div>
+
+            <div class="informacao">
+              <span>Tipo de material biológico</span>
+              <strong>{{ laminaSelecionada.tipo_material_biologico || 'Não informado' }}</strong>
+            </div>
+
+            <div class="informacao">
+              <span>Material</span>
+              <strong>{{ laminaSelecionada.material || 'Não informado' }}</strong>
+            </div>
+
+            <div class="informacao">
+              <span>Aumento</span>
+              <strong>{{ laminaSelecionada.aumento || 'Não informado' }}</strong>
+            </div>
+
+            <div class="informacao">
+              <span>Origem</span>
+              <strong>{{ laminaSelecionada.origem || 'Não informada' }}</strong>
+            </div>
+
+          </div>
+
+          <div class="texto-informacao">
+            <span>Descrição</span>
+            <p>{{ laminaSelecionada.descricao || 'Nenhuma descrição cadastrada.' }}</p>
+          </div>
+
+          <div class="texto-informacao">
+            <span>Estruturas observadas</span>
+            <p>{{ laminaSelecionada.estruturas_observadas || 'Nenhuma estrutura informada.' }}</p>
+          </div>
+
+        </section>
+
+        <!-- CONSERVAÇÃO E ARMAZENAMENTO -->
+        <section class="grupo-informacoes">
+
+          <h2>Conservação e armazenamento</h2>
+
+          <div class="grade-informacoes">
+
+            <div class="informacao">
+              <span>Estado de conservação</span>
+              <strong>{{ laminaSelecionada.estado_conservacao || 'Não informado' }}</strong>
+            </div>
+
+            <div class="informacao">
+              <span>Quantidade</span>
+              <strong>{{ laminaSelecionada.quantidade }}</strong>
+            </div>
+
+            <div class="informacao">
+              <span>Número do patrimônio</span>
+              <strong>{{ laminaSelecionada.numero_patrimonio || 'Não informado' }}</strong>
+            </div>
+
+            <div class="informacao">
+              <span>Local de armazenamento</span>
+              <strong>{{ laminaSelecionada.local || 'Não informado' }}</strong>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- INFORMAÇÕES COMPLEMENTARES -->
+        <section class="grupo-informacoes">
+
+          <h2>Informações complementares</h2>
+
+          <div class="texto-informacao">
+            <span>Referências bibliográficas</span>
+            <p>{{ laminaSelecionada.referencias_bibliograficas || 'Nenhuma referência cadastrada.' }}</p>
+          </div>
+
+          <div class="texto-informacao">
+            <span>Observações</span>
+            <p>{{ laminaSelecionada.observacoes || 'Nenhuma observação cadastrada.' }}</p>
+          </div>
+
+        </section>
+
+        <!-- REGISTRO DO ACERVO -->
+        <section class="grupo-informacoes">
+
+          <h2>Registro do acervo</h2>
+
+          <div class="grade-informacoes">
+
+            <div class="informacao">
+              <span>ID do registro</span>
+              <strong>{{ laminaSelecionada.id }}</strong>
+            </div>
+
+            <div class="informacao">
+              <span>Data de cadastro</span>
+              <strong>
+                {{ laminaSelecionada.data_cadastro ? (laminaSelecionada.data_cadastro | date:'dd/MM/yyyy HH:mm') : 'Não informada' }}
+              </strong>
+            </div>
+
+            <div class="informacao">
+              <span>Última atualização</span>
+              <strong>
+                {{ laminaSelecionada.ultima_atualizacao ? (laminaSelecionada.ultima_atualizacao | date:'dd/MM/yyyy HH:mm') : 'Não informada' }}
+              </strong>
+            </div>
+
+            <div class="informacao">
+              <span>Responsável pelo cadastro (ID)</span>
+              <strong>{{ laminaSelecionada.responsavel_cadastro_id ?? 'Não definido' }}</strong>
+            </div>
+
+          </div>
+
+        </section>
+
+      </div>
+
+      <!-- RODAPÉ DO MODAL -->
+      <footer class="modal-rodape">
+
+        <button
+          type="button"
+          class="botao-voltar"
+          (click)="voltarAoCatalogo()"
+        >
+          ← Voltar ao catálogo
+        </button>
+
+      </footer>
+
+    </article>
+
+  </div>
+
+}

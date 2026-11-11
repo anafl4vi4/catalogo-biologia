@@ -1,5 +1,6 @@
 
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { Cabeca } from '../../componentes/cabeca/cabeca';
 import { Pesquisa } from '../../componentes/pesquisa/pesquisa';
@@ -17,7 +18,7 @@ import {
 @Component({
   selector: 'app-laminas',
   standalone: true,
-  imports: [Cabeca, Pesquisa],
+  imports: [CommonModule, Cabeca, Pesquisa],
   templateUrl: './laminas.html',
   styleUrl: './laminas.css'
 })
@@ -28,6 +29,9 @@ export class Laminas implements OnInit {
 
   laminas: Lamina[] = [];
   categorias: Categoria[] = [];
+
+  // Guarda a lâmina selecionada para abrir os detalhes.
+  laminaSelecionada: Lamina | null = null;
 
   carregandoLaminas = false;
   erroCarregamento = false;
@@ -73,7 +77,6 @@ export class Laminas implements OnInit {
     this.categoriasApi.listar().subscribe({
       next: (dados) => {
         this.categorias = dados;
-
         this.cdr.detectChanges();
       },
       error: (erro) => {
@@ -90,11 +93,13 @@ export class Laminas implements OnInit {
     return this.laminas.filter(lamina => {
 
       const nome = (lamina.nome || '').toLowerCase();
+      const nomeCientifico = (lamina.nome_cientifico || '').toLowerCase();
       const categoria = (lamina.categoria || '').toLowerCase();
       const descricao = (lamina.descricao || '').toLowerCase();
 
       const correspondePesquisa =
         nome.includes(termo) ||
+        nomeCientifico.includes(termo) ||
         categoria.includes(termo) ||
         descricao.includes(termo);
 
@@ -114,7 +119,16 @@ export class Laminas implements OnInit {
   // Atualiza a categoria selecionada no filtro.
   aoSelecionarCategoria(evento: Event): void {
     const campo = evento.target as HTMLSelectElement;
-
     this.categoriaSelecionada = campo.value;
+  }
+
+  // Abre os detalhes da lâmina selecionada.
+  abrirDetalhes(lamina: Lamina): void {
+    this.laminaSelecionada = lamina;
+  }
+
+  // Fecha os detalhes e retorna ao catálogo.
+  voltarAoCatalogo(): void {
+    this.laminaSelecionada = null;
   }
 }
