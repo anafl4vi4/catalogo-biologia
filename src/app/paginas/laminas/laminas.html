@@ -1,4 +1,3 @@
-
 <app-cabeca></app-cabeca>
 
 <div class="pagina">
@@ -10,7 +9,8 @@
 
     <p>
       Explore as lâminas disponíveis no catálogo de Biologia.
-      Consulte informações sobre materiais, aumento e categoria.
+      Consulte informações sobre tipo de material biológico,
+      aumento máximo e categoria.
     </p>
   </section>
 
@@ -26,6 +26,7 @@
 
     <select
       id="filtro-categoria"
+      name="categoria"
       [value]="categoriaSelecionada"
       (change)="aoSelecionarCategoria($event)"
     >
@@ -63,6 +64,7 @@
 
     } @else {
 
+      <!-- CARDS DAS LÂMINAS -->
       @for (lamina of laminasFiltradas; track lamina.id) {
 
         <article
@@ -76,6 +78,7 @@
         >
 
           <div class="imagem-lamina">
+
             @if (lamina.imagem) {
               <img
                 [src]="lamina.imagem"
@@ -84,6 +87,7 @@
             } @else {
               {{ lamina.icone || '🔬' }}
             }
+
           </div>
 
           <div class="informacoes">
@@ -94,11 +98,18 @@
 
             <h2>{{ lamina.nome }}</h2>
 
-            <p>{{ lamina.descricao || 'Sem descrição disponível.' }}</p>
+            <p>
+              {{ lamina.descricao || 'Sem descrição disponível.' }}
+            </p>
 
             <div class="detalhes">
-              <span>🔍 {{ lamina.aumento || 'Aumento não informado' }}</span>
-              <span>🧪 {{ lamina.material || 'Material não informado' }}</span>
+              <span>
+                🔍 {{ lamina.aumento_maximo || 'Aumento máximo não informado' }}
+              </span>
+
+              <span>
+                🧪 {{ lamina.tipo_material_biologico || 'Tipo de material não informado' }}
+              </span>
             </div>
 
             <span class="ver-detalhes">
@@ -165,9 +176,10 @@
 
       </header>
 
-      <!-- IDENTIFICAÇÃO -->
+      <!-- CONTEÚDO DO MODAL -->
       <div class="modal-conteudo">
 
+        <!-- IDENTIFICAÇÃO -->
         <section class="detalhe-principal">
 
           <div class="detalhe-imagem">
@@ -178,7 +190,9 @@
                 [alt]="'Imagem da lâmina ' + laminaSelecionada.nome"
               >
             } @else {
-              <span>{{ laminaSelecionada.icone || '🔬' }}</span>
+              <span>
+                {{ laminaSelecionada.icone || '🔬' }}
+              </span>
             }
 
           </div>
@@ -219,34 +233,44 @@
 
             <div class="informacao">
               <span>Tipo de material biológico</span>
-              <strong>{{ laminaSelecionada.tipo_material_biologico || 'Não informado' }}</strong>
+              <strong>
+                {{ laminaSelecionada.tipo_material_biologico || 'Não informado' }}
+              </strong>
             </div>
 
             <div class="informacao">
-              <span>Material</span>
-              <strong>{{ laminaSelecionada.material || 'Não informado' }}</strong>
+              <span>Aumento máximo</span>
+              <strong>
+                {{ laminaSelecionada.aumento_maximo || 'Não informado' }}
+              </strong>
             </div>
 
-            <div class="informacao">
-              <span>Aumento</span>
-              <strong>{{ laminaSelecionada.aumento || 'Não informado' }}</strong>
+          </div>
+
+          <!-- O QUE É E FUNÇÃO LADO A LADO -->
+          <div class="grade-textos">
+
+            <div class="texto-informacao">
+              <span>O que é</span>
+              <p>
+                {{ laminaSelecionada.o_que_e || 'Nenhuma informação cadastrada.' }}
+              </p>
             </div>
 
-            <div class="informacao">
-              <span>Origem</span>
-              <strong>{{ laminaSelecionada.origem || 'Não informada' }}</strong>
+            <div class="texto-informacao">
+              <span>Função</span>
+              <p>
+                {{ laminaSelecionada.funcao || 'Nenhuma função cadastrada.' }}
+              </p>
             </div>
 
           </div>
 
           <div class="texto-informacao">
             <span>Descrição</span>
-            <p>{{ laminaSelecionada.descricao || 'Nenhuma descrição cadastrada.' }}</p>
-          </div>
-
-          <div class="texto-informacao">
-            <span>Estruturas observadas</span>
-            <p>{{ laminaSelecionada.estruturas_observadas || 'Nenhuma estrutura informada.' }}</p>
+            <p>
+              {{ laminaSelecionada.descricao || 'Nenhuma descrição cadastrada.' }}
+            </p>
           </div>
 
         </section>
@@ -258,9 +282,14 @@
 
           <div class="grade-informacoes">
 
-            <div class="informacao">
+            <div
+              class="informacao"
+              [class.nao-selecionada]="!laminaSelecionada.estado_conservacao"
+            >
               <span>Estado de conservação</span>
-              <strong>{{ laminaSelecionada.estado_conservacao || 'Não informado' }}</strong>
+              <strong>
+                {{ laminaSelecionada.estado_conservacao || 'Não selecionado' }}
+              </strong>
             </div>
 
             <div class="informacao">
@@ -270,12 +299,16 @@
 
             <div class="informacao">
               <span>Número do patrimônio</span>
-              <strong>{{ laminaSelecionada.numero_patrimonio || 'Não informado' }}</strong>
+              <strong>
+                {{ laminaSelecionada.numero_patrimonio || 'Não informado' }}
+              </strong>
             </div>
 
             <div class="informacao">
               <span>Local de armazenamento</span>
-              <strong>{{ laminaSelecionada.local || 'Não informado' }}</strong>
+              <strong>
+                {{ laminaSelecionada.local || 'Não informado' }}
+              </strong>
             </div>
 
           </div>
@@ -289,12 +322,16 @@
 
           <div class="texto-informacao">
             <span>Referências bibliográficas</span>
-            <p>{{ laminaSelecionada.referencias_bibliograficas || 'Nenhuma referência cadastrada.' }}</p>
+            <p>
+              {{ laminaSelecionada.referencias_bibliograficas || 'Nenhuma referência cadastrada.' }}
+            </p>
           </div>
 
           <div class="texto-informacao">
             <span>Observações</span>
-            <p>{{ laminaSelecionada.observacoes || 'Nenhuma observação cadastrada.' }}</p>
+            <p>
+              {{ laminaSelecionada.observacoes || 'Nenhuma observação cadastrada.' }}
+            </p>
           </div>
 
         </section>
@@ -327,7 +364,9 @@
 
             <div class="informacao">
               <span>Responsável pelo cadastro (ID)</span>
-              <strong>{{ laminaSelecionada.responsavel_cadastro_id ?? 'Não definido' }}</strong>
+              <strong>
+                {{ laminaSelecionada.responsavel_cadastro_id ?? 'Não definido' }}
+              </strong>
             </div>
 
           </div>

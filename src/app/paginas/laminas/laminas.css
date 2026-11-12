@@ -1,4 +1,3 @@
-
 /* ===== CONFIGURAÇÕES GERAIS ===== */
 
 :host {
@@ -466,6 +465,34 @@
   white-space: pre-line;
 }
 
+/* O QUE É E FUNÇÃO LADO A LADO */
+
+.grade-textos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.grade-textos .texto-informacao {
+  min-width: 0;
+  margin-top: 0;
+  box-sizing: border-box;
+}
+
+/* ESTADO DE CONSERVAÇÃO NÃO SELECIONADO */
+
+.informacao.nao-selecionada {
+  border: 1px dashed #e2c99b;
+  background: #fffaf0;
+}
+
+.informacao.nao-selecionada strong {
+  color: #a17b3e;
+  font-weight: 500;
+  font-style: italic;
+}
+
 /* Rodapé */
 
 .modal-rodape {
@@ -624,6 +651,10 @@
   }
 
   .grade-informacoes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .grade-textos {
     grid-template-columns: minmax(0, 1fr);
   }
 

@@ -1,4 +1,3 @@
-
 require('dotenv').config();
 
 const express = require('express');
@@ -16,7 +15,10 @@ const pool = new Pool({
   port: Number(process.env.DB_PORT || 5432),
   database: process.env.DB_NAME,
   user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD
+  password: process.env.DB_PASSWORD,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 app.use(cors());
@@ -263,6 +265,7 @@ app.post('/api/auth/login', async (req, res) => {
 // ==========================================
 
 // LISTAR USUÁRIOS
+
 app.get('/api/usuarios', verificarToken, apenasAdmin, async (req, res) => {
   try {
     const resultado = await pool.query(
@@ -281,6 +284,7 @@ app.get('/api/usuarios', verificarToken, apenasAdmin, async (req, res) => {
 });
 
 // CADASTRAR USUÁRIO
+
 app.post('/api/usuarios', verificarToken, apenasAdmin, async (req, res) => {
   const { nome, email, senha, tipo } = req.body;
 
@@ -331,6 +335,7 @@ app.post('/api/usuarios', verificarToken, apenasAdmin, async (req, res) => {
 });
 
 // EXCLUIR USUÁRIO
+
 app.delete('/api/usuarios/:id', verificarToken, apenasAdmin, async (req, res) => {
   const id = Number(req.params.id);
 
@@ -424,15 +429,14 @@ const consultaLaminas = `
     c.nome AS categoria,
     l.tipo_material_biologico,
     l.descricao,
-    l.material,
-    l.aumento,
+    l.aumento_maximo,
+    l.o_que_e,
+    l.funcao,
     l.numero_patrimonio,
     l.quantidade,
     l.data_cadastro,
     l.ultima_atualizacao,
     l.responsavel_cadastro_id,
-    l.origem,
-    l.estruturas_observadas,
     l.estado_conservacao,
     l.imagem,
     l.local,
@@ -518,12 +522,11 @@ app.post('/api/laminas', verificarToken, apenasAdmin, async (req, res) => {
     categoria,
     tipo_material_biologico,
     descricao,
-    material,
-    aumento,
+    aumento_maximo,
+    o_que_e,
+    funcao,
     numero_patrimonio,
     quantidade,
-    origem,
-    estruturas_observadas,
     estado_conservacao,
     imagem,
     local,
@@ -537,19 +540,14 @@ app.post('/api/laminas', verificarToken, apenasAdmin, async (req, res) => {
     });
   }
 
-  const estadosPermitidos = [
-    'Novo',
-    'Regular',
-    'Velho',
-    'Danificado'
-  ];
+  const estadosPermitidos = ['Íntegra', 'Comprometida'];
 
   if (
-    estado_conservacao &&
+    estado_conservacao != null &&
     !estadosPermitidos.includes(estado_conservacao)
   ) {
     return res.status(400).json({
-      mensagem: 'Estado de conservação inválido.'
+      mensagem: 'Estado de conservação inválido. Utilize Íntegra ou Comprometida.'
     });
   }
 
@@ -575,12 +573,11 @@ app.post('/api/laminas', verificarToken, apenasAdmin, async (req, res) => {
         categoria_id,
         tipo_material_biologico,
         descricao,
-        material,
-        aumento,
+        aumento_maximo,
+        o_que_e,
+        funcao,
         numero_patrimonio,
         quantidade,
-        origem,
-        estruturas_observadas,
         estado_conservacao,
         imagem,
         local,
@@ -590,7 +587,7 @@ app.post('/api/laminas', verificarToken, apenasAdmin, async (req, res) => {
       )
       VALUES (
         $1, $2, $3, $4, $5, $6, $7, $8, $9,
-        $10, $11, $12, $13, $14, $15, $16, $17, $18
+        $10, $11, $12, $13, $14, $15, $16, $17
       )
       RETURNING *;
     `, [
@@ -600,12 +597,11 @@ app.post('/api/laminas', verificarToken, apenasAdmin, async (req, res) => {
       categoriaId,
       tipo_material_biologico || null,
       descricao || null,
-      material || null,
-      aumento || null,
+      aumento_maximo || null,
+      o_que_e || null,
+      funcao || null,
       numero_patrimonio || null,
       quantidade ?? 0,
-      origem || null,
-      estruturas_observadas || null,
       estado_conservacao || null,
       imagem || null,
       local || null,
@@ -654,12 +650,11 @@ app.put('/api/laminas/:id', verificarToken, apenasAdmin, async (req, res) => {
     categoria,
     tipo_material_biologico,
     descricao,
-    material,
-    aumento,
+    aumento_maximo,
+    o_que_e,
+    funcao,
     numero_patrimonio,
     quantidade,
-    origem,
-    estruturas_observadas,
     estado_conservacao,
     imagem,
     local,
@@ -673,19 +668,14 @@ app.put('/api/laminas/:id', verificarToken, apenasAdmin, async (req, res) => {
     });
   }
 
-  const estadosPermitidos = [
-    'Novo',
-    'Regular',
-    'Velho',
-    'Danificado'
-  ];
+  const estadosPermitidos = ['Íntegra', 'Comprometida'];
 
   if (
-    estado_conservacao &&
+    estado_conservacao != null &&
     !estadosPermitidos.includes(estado_conservacao)
   ) {
     return res.status(400).json({
-      mensagem: 'Estado de conservação inválido.'
+      mensagem: 'Estado de conservação inválido. Utilize Íntegra ou Comprometida.'
     });
   }
 
@@ -712,18 +702,18 @@ app.put('/api/laminas/:id', verificarToken, apenasAdmin, async (req, res) => {
         categoria_id = $4,
         tipo_material_biologico = $5,
         descricao = $6,
-        material = $7,
-        aumento = $8,
-        numero_patrimonio = $9,
-        quantidade = $10,
-        origem = $11,
-        estruturas_observadas = $12,
-        estado_conservacao = $13,
-        imagem = $14,
-        local = $15,
-        referencias_bibliograficas = $16,
-        observacoes = $17
-      WHERE id = $18
+        aumento_maximo = $7,
+        o_que_e = $8,
+        funcao = $9,
+        numero_patrimonio = $10,
+        quantidade = $11,
+        estado_conservacao = $12,
+        imagem = $13,
+        local = $14,
+        referencias_bibliograficas = $15,
+        observacoes = $16,
+        ultima_atualizacao = NOW()
+      WHERE id = $17
       RETURNING *;
     `, [
       codigo,
@@ -732,12 +722,11 @@ app.put('/api/laminas/:id', verificarToken, apenasAdmin, async (req, res) => {
       categoriaId,
       tipo_material_biologico || null,
       descricao || null,
-      material || null,
-      aumento || null,
+      aumento_maximo || null,
+      o_que_e || null,
+      funcao || null,
       numero_patrimonio || null,
       quantidade ?? 0,
-      origem || null,
-      estruturas_observadas || null,
       estado_conservacao || null,
       imagem || null,
       local || null,

@@ -1,19 +1,11 @@
-
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Cabeca } from '../../componentes/cabeca/cabeca';
 import { Pesquisa } from '../../componentes/pesquisa/pesquisa';
 
-import {
-  LaminasApi,
-  Lamina
-} from '../../servicos/laminas-api';
-
-import {
-  CategoriasApi,
-  Categoria
-} from '../../servicos/categorias-api';
+import { LaminasApi, Lamina } from '../../servicos/laminas-api';
+import { CategoriasApi, Categoria } from '../../servicos/categorias-api';
 
 @Component({
   selector: 'app-laminas',
@@ -22,86 +14,99 @@ import {
   templateUrl: './laminas.html',
   styleUrl: './laminas.css'
 })
-export class Laminas implements OnInit {
-
-  termoPesquisa = '';
-  categoriaSelecionada = 'Todas';
+export class Laminas {
 
   laminas: Lamina[] = [];
   categorias: Categoria[] = [];
 
-  // Guarda a lâmina selecionada para abrir os detalhes.
-  laminaSelecionada: Lamina | null = null;
+  termoPesquisa = '';
+  categoriaSelecionada = 'Todas';
 
-  carregandoLaminas = false;
+  carregandoLaminas = true;
   erroCarregamento = false;
+
+  laminaSelecionada: Lamina | null = null;
 
   constructor(
     private laminasApi: LaminasApi,
     private categoriasApi: CategoriasApi,
     private cdr: ChangeDetectorRef
-  ) {}
-
-  ngOnInit(): void {
+  ) {
     this.listarLaminas();
     this.listarCategorias();
   }
 
-  // Busca as lâminas cadastradas no banco de dados.
   listarLaminas(): void {
     this.carregandoLaminas = true;
     this.erroCarregamento = false;
 
     this.laminasApi.listar().subscribe({
-      next: (dados) => {
-        this.laminas = dados;
 
+      next: (dados) => {
+        this.laminas = [...dados];
         this.carregandoLaminas = false;
-        this.erroCarregamento = false;
 
         this.cdr.detectChanges();
+
+        console.log('Lâminas carregadas:', this.laminas);
+        console.log('Quantidade:', this.laminas.length);
       },
+
       error: (erro) => {
         console.error('Erro ao carregar as lâminas:', erro);
 
-        this.carregandoLaminas = false;
         this.erroCarregamento = true;
+        this.carregandoLaminas = false;
 
         this.cdr.detectChanges();
       }
+
     });
   }
 
-  // Busca as categorias cadastradas no banco de dados.
   listarCategorias(): void {
     this.categoriasApi.listar().subscribe({
+
       next: (dados) => {
-        this.categorias = dados;
+        this.categorias = [...dados];
         this.cdr.detectChanges();
+
+        console.log('Categorias carregadas:', this.categorias);
       },
+
       error: (erro) => {
         console.error('Erro ao carregar as categorias:', erro);
-        this.cdr.detectChanges();
       }
+
     });
   }
 
-  // Filtra as lâminas pela pesquisa e pela categoria selecionada.
   get laminasFiltradas(): Lamina[] {
     const termo = this.termoPesquisa.trim().toLowerCase();
 
     return this.laminas.filter(lamina => {
 
       const nome = (lamina.nome || '').toLowerCase();
+      const codigo = (lamina.codigo || '').toLowerCase();
       const nomeCientifico = (lamina.nome_cientifico || '').toLowerCase();
       const categoria = (lamina.categoria || '').toLowerCase();
       const descricao = (lamina.descricao || '').toLowerCase();
+      const tipoMaterialBiologico =
+        (lamina.tipo_material_biologico || '').toLowerCase();
+      const aumentoMaximo = (lamina.aumento_maximo || '').toLowerCase();
+      const oQueE = (lamina.o_que_e || '').toLowerCase();
+      const funcao = (lamina.funcao || '').toLowerCase();
 
       const correspondePesquisa =
         nome.includes(termo) ||
+        codigo.includes(termo) ||
         nomeCientifico.includes(termo) ||
         categoria.includes(termo) ||
-        descricao.includes(termo);
+        descricao.includes(termo) ||
+        tipoMaterialBiologico.includes(termo) ||
+        aumentoMaximo.includes(termo) ||
+        oQueE.includes(termo) ||
+        funcao.includes(termo);
 
       const correspondeCategoria =
         this.categoriaSelecionada === 'Todas' ||
@@ -111,24 +116,21 @@ export class Laminas implements OnInit {
     });
   }
 
-  // Recebe o texto digitado no componente de pesquisa.
   aoPesquisar(termo: string): void {
     this.termoPesquisa = termo;
   }
 
-  // Atualiza a categoria selecionada no filtro.
   aoSelecionarCategoria(evento: Event): void {
     const campo = evento.target as HTMLSelectElement;
     this.categoriaSelecionada = campo.value;
   }
 
-  // Abre os detalhes da lâmina selecionada.
   abrirDetalhes(lamina: Lamina): void {
     this.laminaSelecionada = lamina;
   }
 
-  // Fecha os detalhes e retorna ao catálogo.
   voltarAoCatalogo(): void {
     this.laminaSelecionada = null;
   }
+
 }

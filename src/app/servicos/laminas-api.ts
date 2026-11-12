@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -12,8 +11,10 @@ export interface Lamina {
   tipo_material_biologico: string | null;
 
   descricao: string | null;
-  material: string | null;
-  aumento: string | null;
+  aumento_maximo: string | null;
+
+  o_que_e: string | null;
+  funcao: string | null;
 
   numero_patrimonio: string | null;
   quantidade: number;
@@ -22,8 +23,6 @@ export interface Lamina {
   ultima_atualizacao: string;
   responsavel_cadastro_id: number | null;
 
-  origem: string | null;
-  estruturas_observadas: string | null;
   estado_conservacao: string | null;
   imagem: string | null;
   local: string | null;

@@ -1,11 +1,13 @@
-
 <div class="campo-pesquisa">
   <span class="icone-pesquisa">🔍</span>
 
   <input
+    id="pesquisa-laminas"
+    name="pesquisa"
     type="search"
     placeholder="Pesquisar lâmina por nome, categoria ou descrição..."
     aria-label="Pesquisar lâmina"
+    autocomplete="on"
     (input)="aoPesquisar($event)"
   />
 </div>
