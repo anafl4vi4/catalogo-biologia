@@ -1,8 +1,13 @@
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef
+} from '@angular/core';
 
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+
 import { UsuariosApi, Usuario } from '../../servicos/usuarios-api';
 import { Autenticacao } from '../../servicos/autenticacao';
 import { CabecalhoAdmin } from '../../componentes/cabecalho-admin/cabecalho-admin';
@@ -10,18 +15,24 @@ import { CabecalhoAdmin } from '../../componentes/cabecalho-admin/cabecalho-admi
 @Component({
   selector: 'app-usuarios',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, CabecalhoAdmin],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterLink,
+    CabecalhoAdmin
+  ],
   templateUrl: './usuarios.html',
   styleUrl: './usuarios.css'
 })
 export class Usuarios implements OnInit {
+
   administradores: Usuario[] = [];
 
   nome = '';
   email = '';
   senha = '';
 
-  carregando = false;
+  carregando = true;
   salvando = false;
 
   mensagemErro = '';
@@ -31,9 +42,11 @@ export class Usuarios implements OnInit {
 
   constructor(
     private usuariosApi: UsuariosApi,
-    private autenticacao: Autenticacao
+    private autenticacao: Autenticacao,
+    private cdr: ChangeDetectorRef
   ) {
-    this.usuarioAtualId = this.autenticacao.obterUsuario()?.id ?? null;
+    this.usuarioAtualId =
+      this.autenticacao.obterUsuario()?.id ?? null;
   }
 
   ngOnInit(): void {
@@ -45,19 +58,29 @@ export class Usuarios implements OnInit {
     this.mensagemErro = '';
 
     this.usuariosApi.listar().subscribe({
+
       next: (usuarios) => {
         this.administradores = usuarios.filter(
           usuario => usuario.tipo === 'ADMIN'
         );
 
         this.carregando = false;
+
+        this.cdr.detectChanges();
       },
+
       error: (erro) => {
+        console.error('Erro ao listar administradores:', erro);
+
         this.carregando = false;
+
         this.mensagemErro =
           erro.error?.mensagem ||
           'Não foi possível carregar os administradores.';
+
+        this.cdr.detectChanges();
       }
+
     });
   }
 
@@ -65,13 +88,18 @@ export class Usuarios implements OnInit {
     this.mensagemErro = '';
     this.mensagemSucesso = '';
 
-    if (!this.nome.trim() || !this.email.trim() || !this.senha) {
+    if (
+      !this.nome.trim() ||
+      !this.email.trim() ||
+      !this.senha
+    ) {
       this.mensagemErro = 'Preencha todos os campos.';
       return;
     }
 
     if (this.senha.length < 8) {
-      this.mensagemErro = 'A senha precisa ter pelo menos 8 caracteres.';
+      this.mensagemErro =
+        'A senha precisa ter pelo menos 8 caracteres.';
       return;
     }
 
@@ -83,8 +111,10 @@ export class Usuarios implements OnInit {
       senha: this.senha,
       tipo: 'ADMIN'
     }).subscribe({
+
       next: () => {
         this.salvando = false;
+
         this.mensagemSucesso =
           'Novo administrador cadastrado com sucesso!';
 
@@ -92,14 +122,23 @@ export class Usuarios implements OnInit {
         this.email = '';
         this.senha = '';
 
+        this.cdr.detectChanges();
+
         this.listarAdministradores();
       },
+
       error: (erro) => {
+        console.error('Erro ao cadastrar administrador:', erro);
+
         this.salvando = false;
+
         this.mensagemErro =
           erro.error?.mensagem ||
           'Não foi possível cadastrar o administrador.';
+
+        this.cdr.detectChanges();
       }
+
     });
   }
 
@@ -122,17 +161,26 @@ export class Usuarios implements OnInit {
     }
 
     this.usuariosApi.excluir(usuario.id).subscribe({
+
       next: () => {
         this.mensagemSucesso =
           'Administrador excluído com sucesso!';
 
+        this.cdr.detectChanges();
+
         this.listarAdministradores();
       },
+
       error: (erro) => {
+        console.error('Erro ao excluir administrador:', erro);
+
         this.mensagemErro =
           erro.error?.mensagem ||
           'Não foi possível excluir o administrador.';
+
+        this.cdr.detectChanges();
       }
+
     });
   }
 }
