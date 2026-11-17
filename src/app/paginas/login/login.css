@@ -5,7 +5,7 @@
   justify-content: center;
   align-items: center;
   padding: 30px 20px;
-  background: #f3f7f3;
+ background: #dae2dd;
 }
 
 .cartao-login {
@@ -34,6 +34,7 @@
 
 .cabecalho-login {
   margin-bottom: 28px;
+  font-family: initial;
 }
 
 .tag {

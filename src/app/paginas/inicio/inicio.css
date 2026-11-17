@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;500;600;700&display=swap');
+
 * {
   box-sizing: border-box;
 }
@@ -8,53 +10,52 @@
 
 body {
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #f5f8f6;
+  font-family: 'Archivo Narrow', Helvetica, sans-serif;
+  background: #dae2dd;
   color: #1f2933;
 }
 
 .app {
   min-height: 100vh;
+  font-family: 'Archivo Narrow', Helvetica, sans-serif;
 }
 
 /* =========================
    CABEÇALHO
 ========================= */
-
-.header {
-  height: 72px;
-  padding: 0 8%;
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #e5ebe7;
+.cabecalho-pagina {
+  max-width: 720px;
+  margin: 0 auto 36px;
+  text-align: center;
+  font-family: initial;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 21px;
+.tag {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 7px 12px;
+  border-radius: 20px;
+  background: #e3f1e6;
+  color: #267342;
+  font-size: 11px;
   font-weight: 700;
-  color: #166534;
+  letter-spacing: 1.5px;
 }
 
-.menu {
-  display: flex;
-  gap: 32px;
+.cabecalho-pagina h1 {
+  margin: 0 0 14px;
+  color: #193d29;
+  font-size: clamp(32px, 5vw, 46px);
+  font-weight: 750;
+  letter-spacing: -1.2px;
 }
 
-.menu a {
-  text-decoration: none;
-  color: #475569;
-  font-size: 15px;
-  font-weight: 500;
-  transition: 0.2s;
-}
-
-.menu a:hover {
-  color: #15803d;
+.cabecalho-pagina p {
+  max-width: 590px;
+  margin: 0 auto;
+  color: #69796d;
+  font-size: 16px;
+  line-height: 1.8;
 }
 
 /* =========================
@@ -65,6 +66,7 @@ body {
   width: 84%;
   max-width: 1200px;
   margin: auto;
+
 }
 
 /* =========================

@@ -1,12 +1,13 @@
 .pagina {
   min-height: 100vh;
-  background: #f5f8f6;
+  background: #dae2dd;
   padding: 60px 8%;
 }
 
 .cabecalho-pagina {
   max-width: 750px;
   margin-bottom: 45px;
+  font-family: initial;
 }
 
 .tag {

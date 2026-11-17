@@ -1,1 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;500;600;700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Archivo Narrow', sans-serif;
+  background: #dae2dd;
+  color: #1f2933;
+}
+
+/* Cabeçalho com fonte original */
+app-cabeca,
+app-cabeca * {
+  font-family: initial !important;
+}

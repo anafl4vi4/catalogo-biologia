@@ -1,7 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;500;600;700&display=swap');
+
+
 .pagina {
   min-height: 100vh;
-  background: #f5f8f6;
+  background: #dae2dd;
   padding: 60px 8%;
+  font-family: 'Archivo Narrow', Helvetica, sans-serif;
 }
 
 /* Cabeçalho */

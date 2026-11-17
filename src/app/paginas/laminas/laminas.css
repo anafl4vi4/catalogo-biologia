@@ -1,9 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;500;600;700&display=swap');
+
+* {
+    font-family: 'Archivo Narrow', sans-serif;
+}
+
 /* ===== CONFIGURAÇÕES GERAIS ===== */
 
 :host {
   display: block;
   min-height: 100vh;
-  background: #f5f8f5;
+  background: #dae2dd;
   color: #24352a;
 }
 
@@ -20,6 +26,7 @@
   max-width: 720px;
   margin: 0 auto 36px;
   text-align: center;
+  font-family: initial;
 }
 
 .tag {
